@@ -1,0 +1,45 @@
+<template>
+  <v-app dark>
+    <Header />
+    <v-main>
+      <nuxt />
+    </v-main>
+    
+  </v-app>
+</template>
+
+<script>
+export default {
+  data: () => ({
+  }),
+}
+</script>
+
+<style lang="scss">
+.row{
+  margin: 0 !important;
+}
+p{
+  margin: 0 !important;
+}
+*{
+  font-style: normal;
+  font-weight: normal;  
+  color: black;
+}
+img{
+  object-fit: cover;
+}
+.my-input1.v-text-field--solo {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.my-input2.v-text-field--solo {
+  border-radius: 0px;
+}
+.my-input1.v-text-field--solo {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+</style>
