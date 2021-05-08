@@ -4,7 +4,7 @@
     <v-main>
       <nuxt />
     </v-main>
-    
+    <Footer />
   </v-app>
 </template>
 
@@ -17,10 +17,10 @@ export default {
 
 <style lang="scss">
 .row{
-  margin: 0 !important;
+  margin: 0;
 }
 p{
-  margin: 0 !important;
+  margin-bottom: 0;
 }
 *{
   font-style: normal;

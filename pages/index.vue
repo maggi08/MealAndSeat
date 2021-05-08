@@ -14,15 +14,24 @@
     <v-container>
       <Popular />
     </v-container>
+    <FoodType />
+    <News />
+    <AboutUs />
   </div>
 </template>
 
 <script>
 import Popular from "@/components/home/Popular"
+import FoodType from "@/components/home/FoodType"
+import News from "@/components/home/News"
+import AboutUs from "@/components/home/AboutUs"
 export default {
   data: () => ({}),
   components:{
-    Popular
+    Popular,
+    FoodType,
+    News,
+    AboutUs
   }
 };
 </script>

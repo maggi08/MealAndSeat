@@ -1,5 +1,5 @@
 <template>
-  <v-row class="row justify-space-between align-center mt-9">
+  <v-row class="row justify-space-between align-center " :class="[$route.path=='/'? 'mt-9': 'mt-0']">
     <v-row class="col-7 align-start">
       <v-menu
         ref="datemenu"
@@ -99,6 +99,7 @@ export default {
   }),
   created(){
     this.time = this.$moment().format("hh:mm")
+    console.log(this.$route);
   },
   methods:{
     goSearch(){
