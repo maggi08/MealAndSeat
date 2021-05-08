@@ -1,6 +1,6 @@
 <template>
   <v-row class="row justify-space-between align-center " :class="[$route.path=='/'? 'mt-9': 'mt-0']">
-    <v-row class="col-7 align-start">
+    <v-row class="col-7 align-start" :class="[$route.path=='/'? '': 'pb-0']">
       <v-menu
         ref="datemenu"
         
@@ -67,7 +67,7 @@
       ></v-text-field>
       
     </v-row>
-    <v-col class="col-3 ">
+    <v-col class="col-3 " :class="[$route.path=='/'? '': 'pb-0']">
       <v-text-field
         v-model="restaurant"
         prepend-inner-icon="mdi-magnify"
@@ -75,8 +75,8 @@
         placeholder="Локация, ресторан или кафе"
       ></v-text-field>
     </v-col>
-    <v-col class="col-2 ">
-      <button @click="goSearch" class="d-flex justify-center align-center btn mb-7">Найти место</button>
+    <v-col class="col-2 " :class="[$route.path=='/'? '': 'pb-0']">
+      <button @click="goSearch" class="d-flex justify-center align-center btn mb-7" :class="[$route.path=='/'? '': 'btn-red']">Найти место</button>
     </v-col>
  </v-row>
 </template>
@@ -139,6 +139,13 @@ export default {
   &:hover{
     background: white;
     color: $theme-color;
+  }
+  &-red{
+    background: $red-color;
+    &:hover{
+      background: #fff;
+      color: $red-color;
+    }
   }
 }
 

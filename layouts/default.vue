@@ -22,6 +22,9 @@ export default {
 p{
   margin-bottom: 0;
 }
+.v-application p{
+  margin-bottom: 0;
+}
 *{
   font-style: normal;
   font-weight: normal;  
