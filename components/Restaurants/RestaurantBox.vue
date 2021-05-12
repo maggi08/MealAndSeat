@@ -3,11 +3,9 @@
     <v-col class="box">
       <div class="image">
         <nuxt-link to="/">
-
-        <img v-if="item.image" :src="item.image" alt="" />
-        <img v-else src="@/assets/default.svg" alt="" />
+          <img v-if="item.image" :src="item.image" alt="" />
+          <img v-else src="@/assets/default.svg" alt="" />
         </nuxt-link>
-
       </div>
       <div class="">
         <nuxt-link to="/">
@@ -20,8 +18,8 @@
           readonly
           size="15"
           :value="item.rating"
-          background-color="warning lighten-1"
-          color="warning"
+          background-color="#F35757 lighten-1"
+          color="#F35757"
         >
         </v-rating>
 
@@ -30,13 +28,13 @@
           {{ item.address.city }}
         </h2>
 
-        <div v-if="item.times.length>0" class="d-flex row ml-2 mt-3">
-          <div  class="times" v-for="(i, index) in item.times" :key="index">
+        <div v-if="item.times.length > 0" class="d-flex row ml-2 mt-3">
+          <div class="times" v-for="(i, index) in item.times" :key="index">
             {{ i }}
           </div>
         </div>
         <h2 v-else class="ml-2 mt-4">
-          {{item.text}}
+          {{ item.text }}
         </h2>
       </div>
     </v-col>
@@ -76,8 +74,8 @@ h1 {
   line-height: 25px;
   color: #3e8ea9;
 
-  &:hover{
-    color: $theme-color; 
+  &:hover {
+    color: $theme-color;
   }
 }
 h2 {
@@ -92,7 +90,7 @@ h2 {
 
   display: flex;
 }
-a{
+a {
   text-decoration: none;
 }
 

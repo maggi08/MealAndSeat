@@ -10,27 +10,25 @@
 
 <script>
 export default {
-  data: () => ({
-  }),
-}
+  data: () => ({})
+};
 </script>
 
 <style lang="scss">
-.row{
+.row {
   margin: 0;
 }
-p{
+p {
   margin-bottom: 0;
 }
-.v-application p{
+.v-application p {
   margin-bottom: 0;
 }
-*{
+* {
   font-style: normal;
-  font-weight: normal;  
-  color: black;
+  font-weight: normal;
 }
-img{
+img {
   object-fit: cover;
 }
 .my-input1.v-text-field--solo {
@@ -44,5 +42,4 @@ img{
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
-
 </style>

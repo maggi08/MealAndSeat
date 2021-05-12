@@ -1,9 +1,16 @@
 <template>
   <div class="bg-img">
+    <img src="@/assets/foodtype.png" alt="" />
     <v-container class="">
       <h1>ЗАКАЖИ СВОЕ ЛЮБИМОЕ БЛЮДО</h1>
       <v-row class="types justify-center align-center">
-        <h2 class="item mx-auto" v-for="item,index in type" :key="index">#{{item}}</h2>
+        <h2
+          class="item mx-auto my-2"
+          v-for="(item, index) in type"
+          :key="index"
+        >
+          #{{ item }}
+        </h2>
       </v-row>
     </v-container>
   </div>
@@ -11,9 +18,9 @@
 
 <script>
 export default {
-  data:()=>({
-    type:["asian", "european", "Chinease"],
-  }),
+  data: () => ({
+    type: ["asian", "european", "Chinease"]
+  })
 };
 </script>
 
@@ -27,33 +34,44 @@ export default {
   color: #ffffff;
 }
 
-h1{
+h1 {
   margin-top: 103px;
-
 }
-h2{
+h2 {
   font-weight: 500;
   font-size: 28px;
   line-height: 41px;
   color: #000000;
 }
 
-img{
+img {
   width: 100%;
   height: 100%;
 }
-.bg-img{
+.bg-img {
+  position: relative;
   width: 100%;
-  height: 100%;
-  background: url("@/assets/foodtype.png") no-repeat center center;
+  height: 557px;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+  .container {
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    position: absolute;
+  }
+  // background: url("@/assets/foodtype.png") no-repeat center center;
 }
-.types{
-  margin-top: 32px;
+.types {
+  margin-top: 50px;
   margin-bottom: 158px;
 
-  .item{
+  .item {
     padding: 4px 42px;
-    background: #FFFFFF;
+    background: #ffffff;
     border-radius: 30px;
   }
 }

@@ -1,11 +1,13 @@
 <template>
   <div class="">
     <v-container class="d-flex justify-space-between align-center header">
-      <div class="burger-menu">
+      <!-- <div class="burger-menu">
         <img src="@/assets/burger-menu.svg" alt="" />
-      </div>
+      </div> -->
       <div class="logo">
-        <img src="@/assets/logo.svg" alt="" />
+        <nuxt-link to="/">
+          <img src="@/assets/logo.svg" alt="" />
+        </nuxt-link>
       </div>
       <div class="login">
         <button>Login</button>
@@ -13,15 +15,14 @@
         <button>Sign up</button>
       </div>
     </v-container>
-    
   </div>
 </template>
 
 <script>
-import MainSearch from "@/components/MainSearch"
+import MainSearch from "@/components/MainSearch";
 export default {
   data: () => ({}),
-  components:{
+  components: {
     MainSearch
   }
 };

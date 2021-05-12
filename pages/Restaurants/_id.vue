@@ -13,7 +13,7 @@
       </v-container>
     </div>
 
-    <v-container class="content">
+    <v-container class="content mb-145">
       <div class="">
         <h1 class="mt-6">{{ rest.name }} - {{ rest.place }}</h1>
 
@@ -35,8 +35,8 @@
               readonly
               size="20"
               :value="rest.rating"
-              background-color="warning lighten-1"
-              color="warning"
+              background-color="#F35757 lighten-1"
+              color="#F35757"
             >
             </v-rating>
             {{ rest.rating }}
@@ -164,7 +164,11 @@
               </div>
             </div>
 
-            <button v-if="slice==4" class="more-btn mt-11" @click="slice = menu.length">
+            <button
+              v-if="slice == 4"
+              class="more-btn mt-11"
+              @click="slice = menu.length"
+            >
               Подробнее
             </button>
             <button v-else class="more-btn mt-11" @click="slice = 4">
@@ -177,18 +181,127 @@
           <h1>Отзывы</h1>
           <div class="line mt-6"></div>
 
-          <h2>Общий  рейтинг и обзор</h2>
+          <h2 class="mt-4">Общий рейтинг и обзор</h2>
+          <div class="">
+            <div class="">
+              <p class="reviews-p mt-6">
+                Отзывы могут оставлять только посетители, которые ужинали в этом
+                ресторане.
+              </p>
+
+              <div class="d-flex align-center mt-5">
+                <v-rating
+                  class="mr-1"
+                  length="5"
+                  readonly
+                  size="20"
+                  :value="rest.rating"
+                  background-color="#F35757 lighten-1"
+                  color="#F35757"
+                >
+                </v-rating>
+                {{ rest.rating }} на основе рейтингов за все время
+              </div>
+            </div>
+            <div class=""></div>
+          </div>
+
+          <div class="d-flex align-center mt-7">
+            <div
+              class="d-flex flex-column align-center justify-center px-2 categories-rate "
+            >
+              <p>4.7</p>
+              <p>Цена</p>
+            </div>
+
+            <div
+              class="d-flex flex-column align-center justify-center px-2 categories-rate "
+            >
+              <p>4.9</p>
+              <p>Кухня</p>
+            </div>
+
+            <div
+              class="d-flex flex-column align-center justify-center px-2 categories-rate "
+            >
+              <p>4.0</p>
+              <p>Сервис</p>
+            </div>
+
+            <div class="d-flex flex-column align-center justify-center px-2">
+              <p>5.0</p>
+              <p>Атмосфера</p>
+            </div>
+          </div>
+
+          <div class="d-flex align-center mt-9">
+            <v-icon color="#000" class="mr-2">mdi-thumb-up-outline </v-icon>
+            <p>
+              <span class="bold">100% людей </span> порекомендовали бы это другу
+            </p>
+          </div>
+
+          <div class="line mt-3"></div>
+
+          <div class="comments mt-13">
+            <div class="comment">
+              <div class="d-flex flex-column align-center justify-center">
+                <img class="avatar" src="@/assets/default-user.svg" alt="" />
+                <div class="name mt-4">Ахметов Ерлан</div>
+                <div class="reviews mt-2">
+                  <v-icon class="mr-1" color="#000">mdi-comment-outline</v-icon>
+                  1 отзыв
+                </div>
+              </div>
+              <div class="">
+                <div class="d-flex align-center rate">
+                  <v-rating
+                    class="mr-1"
+                    length="5"
+                    readonly
+                    size="20"
+                    :value="rest.rating"
+                    background-color="#F35757 lighten-1"
+                    color="#F35757"
+                  >
+                  </v-rating>
+
+                  Посещала 10 октября 2020 года
+                </div>
+                <div class="rate-categories d-flex align-center">
+                  Общий <span class="mr-2">5</span> &bull; Кухня
+                  <span class="mr-2">5</span> &bull; Атмосфера
+                  <span class="mr-2">5</span> &bull; Сервис
+                  <span class="mr-2">5</span>
+                </div>
+
+                <div class="comment-content mt-7">
+                  1993 год — открытие ресторана «OZYURT», первый в городе
+                  ресторан безалкогольного формата. В блюдах ресторана
+                  используются высококачественные сбалансированные комбинации
+                  продуктов стандарта «ХАЛАЛ».
+                  <div class="d-flex align-center show-more mt-2">
+                    <v-icon color="#F35757">mdi-plus</v-icon> Читать подробнее
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-
       </div>
       <div class=""></div>
+
+      <RestaurantIdSide />
     </v-container>
   </div>
 </template>
 
 <script>
+import RestaurantIdSide from "@/components/RestaurantsIdSide";
 export default {
+  components: {
+    RestaurantIdSide
+  },
   data: () => ({
     hover: 0,
     slice: 4,
@@ -264,7 +377,10 @@ export default {
       text:
         "На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
     }
-  })
+  }),
+  created() {
+    this.time = this.$moment().format("hh:mm");
+  }
 };
 </script>
 
@@ -286,7 +402,7 @@ h2 {
   font-size: 20px;
   line-height: 23px;
 }
-.blue-color{
+.blue-color {
   color: #3e8ea9;
 }
 h3 {
@@ -453,8 +569,66 @@ h6 {
   font-size: 25px;
   line-height: 29px;
   transition: 0.22s;
-  &:hover{
+  &:hover {
     border-color: $red-color;
   }
+}
+
+.reviews-p {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 23px;
+
+  color: #000000;
+
+  max-width: 374px;
+}
+.categories-rate {
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+.bold {
+  font-weight: 600;
+}
+
+.comment {
+  width: 100%;
+  max-width: 610px;
+
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: 18% 1fr;
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  .name {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+  }
+  .reviews {
+    font-size: 13px;
+    line-height: 15px;
+  }
+  .rate {
+    font-size: 12px;
+    line-height: 14px;
+  }
+  .rate-categories {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    span {
+      margin-left: 8px;
+      color: $red-color;
+    }
+  }
+}
+.mb-145 {
+  margin-bottom: 145px;
 }
 </style>
