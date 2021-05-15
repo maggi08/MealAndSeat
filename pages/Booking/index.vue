@@ -1,6 +1,7 @@
 <template>
   <v-container class="content d-flex justify-space-between mt-11">
     <div class="rest-box mb-16">
+      <div class="pochti">Вы почти забронировали!</div>
       <div class="d-flex mt-5 box">
         <img class="image mr-9" src="@/assets/default.svg" alt="" />
         <div
@@ -178,7 +179,8 @@ export default {
     book() {
       if (!this.$refs.form.validate()) return;
     }
-  }
+  },
+  created() {}
 };
 </script>
 
@@ -192,6 +194,14 @@ export default {
 }
 .v-messages__message {
   color: $red-color;
+}
+.pochti {
+  font-family: $nun;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 21px;
+  line-height: 29px;
+  color: #489424;
 }
 h1 {
   font-size: 40px;

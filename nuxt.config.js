@@ -53,6 +53,38 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "@nuxtjs/pwa", "@nuxtjs/auth-next"],
 
+  axios: {
+    baseURL: "http://95.179.158.161:8080/api/"
+  },
+  auth: {
+    // Options
+    redirect: {
+      callback: "/callback",
+      home: false
+    },
+    strategies: {
+      local: {
+        scheme: "refresh",
+        token: {
+          property: "access"
+        },
+        refreshToken: {
+          property: "refresh",
+          data: "refresh",
+          maxAge: 15 * 24 * 60 * 60
+        },
+        user: {
+          property: ""
+        },
+        endpoints: {
+          login: { url: "auth/sign-in/", method: "post" },
+          // refresh: { url: "token/refresh/", method: "post" },
+          logout: false
+          // user: { url: "profile/", method: "get" }
+        }
+      }
+    }
+  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     lang: {
