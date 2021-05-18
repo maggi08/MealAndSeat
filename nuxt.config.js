@@ -37,7 +37,8 @@ export default {
   plugins: [
     { src: "@/plugins/swiper.js", ssr: false },
     { src: "@/plugins/vmask.js", ssr: false },
-    { src: "@/plugins/ymaps.js", mode: "client" }
+    { src: "@/plugins/ymaps.js", mode: "client" },
+    { src: "@/plugins/vue-toasted.js", ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -64,23 +65,23 @@ export default {
     },
     strategies: {
       local: {
-        scheme: "refresh",
+        // scheme: "refresh",
         token: {
-          property: "access"
+          property: "accessToken"
         },
-        refreshToken: {
-          property: "refresh",
-          data: "refresh",
-          maxAge: 15 * 24 * 60 * 60
-        },
+        // refreshToken: {
+        //   property: "refresh",
+        //   data: "refresh",
+        //   maxAge: 15 * 24 * 60 * 60
+        // },
         user: {
-          property: ""
+          property: false
         },
         endpoints: {
           login: { url: "auth/sign-in/", method: "post" },
           // refresh: { url: "token/refresh/", method: "post" },
-          logout: false
-          // user: { url: "profile/", method: "get" }
+          logout: false,
+          user: { url: "auth/me/", method: "get" }
         }
       }
     }

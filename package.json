@@ -17,10 +17,12 @@
     "nuxt": "^2.15.3",
     "sass": "^1.32.11",
     "sass-loader": "^10.0.1",
+    "sweet-modal-vue": "^2.0.0",
     "swiper": "^6.5.9",
     "v-mask": "^2.2.4",
     "vue-awesome-swiper": "^4.1.1",
     "vue-loader": "^15.9.6",
+    "vue-toasted": "^1.1.28",
     "vue-yandex-maps": "^0.10.10"
   },
   "devDependencies": {

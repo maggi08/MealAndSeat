@@ -42,4 +42,12 @@ img {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
 }
+
+.toasted-container .bottom-right {
+  font-family: $open;
+  font-size: 14px;
+  line-height: 18px;
+  color: white;
+  font-weight: 500;
+}
 </style>

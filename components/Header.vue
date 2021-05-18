@@ -21,11 +21,11 @@
       <div class="text-center modalka">
         <v-dialog v-model="success" width="500">
           <v-card
-            class="pa-15 py-10 d-flex align-center justify-center flex-column "
+            class="pa-15 py-10 d-flex align-center justify-center flex-column text-center "
           >
             <img class="mx-auto" src="@/assets/green-check.svg" alt="" />
-            <h1 class="text-norm mt-5">Вы успешно зарегистрировались!!!</h1>
-            <h2 class="text-norm mt-3">Мы отправили пароль на вашу почту</h2>
+            <h1 v-if="message" class="text-norm mt-5">{{ message }}</h1>
+            <h2 v-if="message2" class="text-norm mt-3">{{ message2 }}</h2>
 
             <v-btn @click="success = false" class="mt-10" color="primary">
               Окей
@@ -34,6 +34,7 @@
         </v-dialog>
       </div>
     </template>
+
     <template>
       <div class="text-center modalka">
         <v-dialog v-model="login" width="500">
@@ -174,6 +175,7 @@
                   <p class="label">Логин</p>
                   <v-text-field
                     class="mt-3 font-weight-small"
+                    ref="email"
                     v-model="person.email"
                     height="30"
                     :rules="emailRules"
@@ -200,11 +202,18 @@
                     required
                   ></v-text-field>
                 </v-col>
+                <div @click="forgotPassword" class="forgot text-right">
+                  Забыли пароль?
+                </div>
+
                 <v-col class="col-12 d-flex justify-center">
                   <v-btn type="submit" class="mx-auto my-btn" color="#55B68D">
                     Войти
                   </v-btn>
                 </v-col>
+                <div class="sozdat text-center mt-4">
+                  Нет аккаунта? <span @click="clicked = 'sign'">Создать</span>
+                </div>
               </v-form>
             </v-col>
           </v-card>
@@ -216,8 +225,12 @@
 
 <script>
 import MainSearch from "@/components/MainSearch";
+
+import toastedMixin from "@/mixins/toasted.mixin";
 export default {
   data: () => ({
+    message: false,
+    message2: false,
     login: false,
     success: false,
     person: {},
@@ -238,6 +251,7 @@ export default {
   components: {
     MainSearch
   },
+  mixins: [toastedMixin],
   computed: {
     passwordMatch() {
       if (this.person?.password1 && this.person?.password2) {
@@ -247,6 +261,26 @@ export default {
     }
   },
   methods: {
+    async forgotPassword() {
+      await this.$axios
+        .$post(`auth/reset-password`, null, {
+          params: { email: this.person.email }
+        })
+        .then(response => {
+          this.login = false;
+          this.success = true;
+          this.message = "";
+          this.message2 = `Мы отправили пароль на ${this.person.email}`;
+          console.log(response);
+          // this.showToasted("Вы успешно зарегистрировались!", "success");
+        })
+        .catch(error => {
+          console.log(error);
+          if (!this.person.email)
+            this.showToasted("Пожалуйста заполните полe Email!", "error");
+          else this.showToasted("Что то пошло не так!", "error");
+        });
+    },
     async submitRegistration() {
       if (!this.$refs.formRegister.validate()) return;
       await this.$axios
@@ -254,10 +288,14 @@ export default {
         .then(response => {
           this.login = false;
           this.success = true;
+          this.message = "Вы успешно зарегистрировались!!!";
+          this.message2 = "Мы отправили пароль на вашу почту";
           console.log(response);
+          // this.showToasted("Вы успешно зарегистрировались!", "success");
         })
         .catch(error => {
           console.log(error);
+          this.showToasted("Что то пошло не так!", "error");
         });
     },
     async submitLogin() {
@@ -268,9 +306,13 @@ export default {
         .then(response => {
           this.login = false;
           console.log(response);
+          this.showToasted("Вы успешно зашли!", "success");
+          console.log(this.$auth);
+          console.log(window.localStorage);
         })
         .catch(error => {
           console.log(error);
+          this.showToasted("Пароль или логин не правильный!", "error");
         });
     }
   }
@@ -318,5 +360,29 @@ export default {
 }
 .my-btn {
   color: #fff;
+  width: 150px;
+  height: 30px;
+
+  background: #55b68d;
+  border-radius: 10px;
+}
+.forgot {
+  font-size: 14px;
+  line-height: 18px;
+  color: #3e8ea9;
+
+  cursor: pointer;
+}
+.sozdat {
+  font-size: 14px;
+  line-height: 18px;
+  color: #000;
+  span {
+    margin-left: 5px;
+    font-size: 14px;
+    line-height: 18px;
+    color: #3e8ea9;
+    cursor: pointer;
+  }
 }
 </style>

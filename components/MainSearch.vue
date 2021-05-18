@@ -1,9 +1,14 @@
 <template>
-  <v-row class="row justify-space-between align-center " :class="[$route.path=='/'? 'mt-9': 'mt-0']">
-    <v-row class="col-7 align-start" :class="[$route.path=='/'? '': 'pb-0']">
+  <v-row
+    class="row justify-space-between align-center "
+    :class="[$route.path == '/' ? 'mt-9' : 'mt-0']"
+  >
+    <v-row
+      class="col-7 align-start"
+      :class="[$route.path == '/' ? '' : 'pb-0']"
+    >
       <v-menu
         ref="datemenu"
-        
         v-model="dateMenu"
         :close-on-content-click="false"
         :return-value.sync="date"
@@ -30,25 +35,17 @@
           :min="$moment().format('YYYY-MM-DD')"
         >
           <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            @click="dateMenu = false"
-          >
+          <v-btn text color="primary" @click="dateMenu = false">
             Cancel
           </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.datemenu.save(date)"
-          >
+          <v-btn text color="primary" @click="$refs.datemenu.save(date)">
             OK
           </v-btn>
         </v-date-picker>
       </v-menu>
       <client-only>
         <v-text-field
-        class="col-3 my-input2"
+          class="col-3 my-input2"
           v-model="time"
           prepend-inner-icon="mdi-clock"
           solo
@@ -58,16 +55,16 @@
       </client-only>
 
       <v-text-field
-      class="col-4 my-input3"
+        class="col-4 my-input3"
         v-model="personCount"
         prepend-inner-icon="mdi-account"
         solo
         type="number"
+        min="1"
         :rules="personRules"
       ></v-text-field>
-      
     </v-row>
-    <v-col class="col-3 " :class="[$route.path=='/'? '': 'pb-0']">
+    <v-col class="col-3 " :class="[$route.path == '/' ? '' : 'pb-0']">
       <v-text-field
         v-model="restaurant"
         prepend-inner-icon="mdi-magnify"
@@ -75,10 +72,16 @@
         placeholder="Локация, ресторан или кафе"
       ></v-text-field>
     </v-col>
-    <v-col class="col-2 " :class="[$route.path=='/'? '': 'pb-0']">
-      <button @click="goSearch" class="d-flex justify-center align-center btn mb-7" :class="[$route.path=='/'? '': 'btn-red']">Найти место</button>
+    <v-col class="col-2 " :class="[$route.path == '/' ? '' : 'pb-0']">
+      <button
+        @click="goSearch"
+        class="d-flex justify-center align-center btn mb-7"
+        :class="[$route.path == '/' ? '' : 'btn-red']"
+      >
+        Найти место
+      </button>
     </v-col>
- </v-row>
+  </v-row>
 </template>
 
 <script>
@@ -90,45 +93,44 @@ export default {
     personCount: 1,
     dateMenu: false,
     timeRules: [
-      v => parseInt(v.split(':')[0])<=24 || "Неправильное время",
-      v => parseInt(v.split(':')[1])<=59 || "Неправильное время",
+      v => parseInt(v.split(":")[0]) <= 24 || "Неправильное время",
+      v => parseInt(v.split(":")[1]) <= 59 || "Неправильное время"
     ],
-    personRules: [
-      v => parseInt(v)<40 || "Максимум"
-    ]
+    personRules: [v => parseInt(v) < 40 || "Максимум"]
   }),
-  created(){
-    this.time = this.$moment().format("hh:mm")
+  created() {
+    this.time = this.$moment().format("hh:mm");
     console.log(this.$route);
   },
-  methods:{
-    goSearch(){
-
+  methods: {
+    goSearch() {
+      console.log(this.$auth);
+      if (this.$auth.loggedIn) console.log(this.$auth.user);
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-*{
+* {
   font-family: $open;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 16px;
   color: #000;
-  &:placeholder{
+  &:placeholder {
     color: rgba(0, 0, 0, 0.5);
   }
 }
-.btn{
+.btn {
   width: 137px;
   height: 35px;
 
   font-weight: 600;
   font-size: 15px;
   line-height: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
 
   background: $theme-color;
   border: 1px solid $theme-color;
@@ -136,17 +138,16 @@ export default {
 
   transition: 0.22s;
 
-  &:hover{
+  &:hover {
     background: white;
     color: $theme-color;
   }
-  &-red{
+  &-red {
     background: $red-color;
-    &:hover{
+    &:hover {
       background: #fff;
       color: $red-color;
     }
   }
 }
-
 </style>
