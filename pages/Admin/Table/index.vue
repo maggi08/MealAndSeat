@@ -119,10 +119,8 @@
                     v-model="table.forChildren"
                     height="30"
                     min="0"
-                    :rules="nameRules"
                     solo
                     outlined
-                    required
                   ></v-checkbox>
                 </v-col>
                 <v-col class="col-12 pa-0">

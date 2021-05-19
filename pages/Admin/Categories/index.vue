@@ -2,7 +2,7 @@
   <div class="">
     <v-row class="justify-space-between align-center">
       <h1>Категории</h1>
-      <v-btn @click="(addRest = true), (apitype = 'post')">
+      <v-btn @click="addRest = true">
         Добавить категорию
         <v-icon class="ml-3" color="primary">
           mdi-plus-circle

@@ -9,8 +9,7 @@
         </v-icon>
       </v-btn>
     </v-row>
-
-    <v-row v-if="meal" class="flex-column">
+    <v-row v-if="meals" class="flex-column">
       <div class="rest align-center" style="background: transparent">
         <div class="rest-item image"></div>
         <div class="rest-item">ID</div>
@@ -20,7 +19,7 @@
         <div class="">Закончено</div>
         <div class="">Особенности</div>
       </div>
-      <v-col v-for="(item, index) in meal.mealList" :key="index" class="pa-0">
+      <v-col v-for="(item, index) in meals.mealList" :key="index" class="pa-0">
         <div
           class="rest align-center"
           :class="{ 'rest-white': index % 2 == 0 }"
@@ -93,11 +92,18 @@
                     :rules="nameRules"
                     item-text="name"
                     item-value="id"
-                    placeholder="12"
+                    placeholder="Восточная"
                     solo
                     outlined
                     required
-                  ></v-select>
+                  >
+                    <template v-slot:item="{ item }">
+                      {{ item }}
+                      <div v-if="item.parentCategory" class="ml-3">
+                        ({{ item.parentCategory.name }})
+                      </div>
+                    </template>
+                  </v-select>
                 </v-col>
 
                 <v-col class="col-12 pa-0">
@@ -148,7 +154,6 @@
                     height="30"
                     solo
                     outlined
-                    required
                   ></v-checkbox>
                 </v-col>
                 <v-col class="col-12 pa-0">
@@ -194,9 +199,9 @@
 import toastedMixin from "@/mixins/toasted.mixin";
 export default {
   async asyncData({ $axios }) {
-    const meal = await $axios.$get(`meal/`);
+    const meals = await $axios.$get(`meal/`);
     const categories = await $axios.$get(`category/`);
-    return { meal, categories };
+    return { meals, categories };
   },
   layout: "admin",
   data: () => ({
@@ -218,7 +223,7 @@ export default {
       await this.$axios
         .$get(`meal/`)
         .then(response => {
-          this.meal = response;
+          this.meals = response;
         })
         .catch(err => {
           console.log(err);

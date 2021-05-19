@@ -1,44 +1,39 @@
 <template>
   <div class="">
     <v-row class="justify-space-between align-center">
-      <h1>Столики</h1>
+      <h1>Скидки</h1>
       <v-btn @click="(addRest = true), (apitype = 'post')">
-        Добавить Столики
+        Добавить скидку
         <v-icon class="ml-3" color="primary">
           mdi-plus-circle
         </v-icon>
       </v-btn>
     </v-row>
-    <v-row v-if="table" class="flex-column">
+
+    <v-row v-if="discounts" class="flex-column">
       <div class="rest align-center" style="background: transparent">
-        <div class="rest-item image"></div>
         <div class="rest-item">ID</div>
-        <div class="rest-item">Название столика</div>
-        <div class="rest-item d-flex">Макс. людей</div>
-        <div class="rest-item d-flex">Дети</div>
-        <div class="">Позиция</div>
-        <div class="">Цена брони</div>
+        <div class="rest-item">Описание</div>
+        <div class="rest-item d-flex">Блюдо</div>
+        <div class="rest-item d-flex">Скидка</div>
       </div>
-      <v-col v-for="(item, index) in table.tableList" :key="index" class="pa-0">
+      <v-col
+        v-for="(item, index) in discounts.discountList"
+        :key="index"
+        class="pa-0"
+      >
+        <!-- <pre>{{ item }}</pre> -->
+
         <div
           class="rest align-center"
           :class="{ 'rest-white': index % 2 == 0 }"
         >
-          <div class="rest-item image">
-            <img
-              :src="`http://95.179.158.161:8080/image/${item.imageSrc}`"
-              width="50px"
-              height="50px"
-              alt=""
-            />
+          <div class="rest-item d-flex">{{ item.id }}</div>
+          <div class="rest-item d-flex">{{ item.description }}</div>
+          <div v-if="item.meal" class="rest-item d-flex">
+            {{ item.meal.name }} людей
           </div>
-          <div class="rest-item">{{ item.id }}</div>
-          <div class="rest-item">{{ item.name }}</div>
-          <div class="rest-item d-flex">{{ item.personCount }} людей</div>
-          <div v-if="item.forChildren" class="rest-item d-flex">+</div>
-          <div v-else class="rest-item d-flex">-</div>
-          <div class="rest-item d-flex">{{ item.position }}</div>
-          <div class="rest-item d-flex">{{ item.reservePrice }}</div>
+          <div class="rest-item d-flex">{{ item.percentage }}</div>
 
           <div class="rest-item d-flex align-center">
             <v-icon
@@ -68,84 +63,58 @@
                 class="mt-8"
               >
                 <v-col class="col-12 pa-0">
-                  <p class="label">Название</p>
-                  <v-text-field
-                    class="mt-3 font-weight-small"
-                    v-model="table.name"
-                    height="30"
-                    :rules="nameRules"
-                    placeholder="Название"
-                    solo
-                    outlined
-                    required
-                  ></v-text-field>
-                </v-col>
-
-                <v-col class="col-12 pa-0">
-                  <p class="label">Количество людей</p>
-                  <v-text-field
-                    class="mt-3 font-weight-small"
-                    v-model="table.personCount"
-                    height="30"
-                    type="number"
-                    min="1"
-                    :rules="numberRules"
-                    placeholder="12"
-                    solo
-                    outlined
-                    required
-                  ></v-text-field>
-                </v-col>
-
-                <v-col class="col-12 pa-0">
-                  <p class="label">Цена брони</p>
-                  <v-text-field
-                    class="mt-3 font-weight-small"
-                    v-model="table.reservePrice"
-                    height="30"
-                    type="number"
-                    min="0"
-                    :rules="numberRules"
-                    placeholder="2000"
-                    solo
-                    outlined
-                    required
-                  ></v-text-field>
-                </v-col>
-                <v-col class="col-12 pa-0">
-                  <p class="label">С детьми</p>
-                  <v-checkbox
-                    class="mt-3 font-weight-small"
-                    v-model="table.forChildren"
-                    height="30"
-                    min="0"
-                    :rules="nameRules"
-                    solo
-                    outlined
-                    required
-                  ></v-checkbox>
-                </v-col>
-                <v-col class="col-12 pa-0">
-                  <p class="label">Позиция</p>
+                  <p class="label">Блюдо</p>
                   <v-select
+                    v-if="meal.mealList"
                     class="mt-3 font-weight-small"
-                    v-model="table.position"
-                    :items="positions"
+                    v-model="discount.mealId"
+                    :items="meal.mealList"
+                    item-text="name"
+                    item-value="id"
                     height="30"
                     min="0"
                     :rules="nameRules"
                     solo
                     outlined
                     required
-                  ></v-select>
+                  >
+                    <template v-slot:item="{ item }">
+                      {{ item.name }}
+                      <div v-if="item.category" class="ml-3">
+                        ({{ item.category.name }})
+                      </div>
+                    </template>
+                  </v-select>
                 </v-col>
+
                 <v-col class="col-12 pa-0">
-                  <v-file-input
-                    show-size
-                    truncate-length="15"
-                    v-model="table.file"
-                    accept="image/png, image/jpeg, image/bmp"
-                  ></v-file-input>
+                  <p class="label">Процент</p>
+                  <v-text-field
+                    class="mt-3 font-weight-small"
+                    v-model="discount.percentage"
+                    height="30"
+                    type="number"
+                    min="0"
+                    max="100"
+                    :rules="numberRules"
+                    placeholder="10%"
+                    solo
+                    outlined
+                    required
+                  ></v-text-field>
+                </v-col>
+
+                <v-col class="col-12 pa-0">
+                  <p class="label">Описание скидки</p>
+                  <v-textarea
+                    class="mt-3"
+                    v-model="discount.description"
+                    :rules="nameRules"
+                    placeholder="Праздник айт"
+                    outlined
+                    solo
+                    required
+                  ></v-textarea>
                 </v-col>
 
                 <v-col class="col-12 d-flex justify-center">
@@ -166,9 +135,9 @@
 import toastedMixin from "@/mixins/toasted.mixin";
 export default {
   async asyncData({ $axios }) {
-    const table = await $axios.$get(`table/`);
-    // const parents = await $axios.$get(`category/parents/`);
-    return { table };
+    const discounts = await $axios.$get(`discount/`);
+    const meal = await $axios.$get(`meal/`);
+    return { discounts, meal };
   },
   layout: "admin",
   data: () => ({
@@ -176,9 +145,12 @@ export default {
     positions: ["STANDARD", "WINDOW", "DOOR", "TAPCHAN", "OUTSIDE"],
     changeId: 0,
     addRest: false,
-    table: {},
+    discount: {},
     nameRules: [v => !!v || "Поле обязательно"],
-    numberRules: [v => !!v || "Поле обязательно"],
+    numberRules: [
+      v => !!v || "Поле обязательно",
+      v => (v >= 0 && v <= 100) || "от 0 до 100"
+    ],
     emailRules: [
       v => !!v || "E-mail обязательно",
       v => /.+@.+/.test(v) || "E-mail не валидный"
@@ -187,11 +159,11 @@ export default {
   }),
   mixins: [toastedMixin],
   methods: {
-    async fetchTable() {
+    async fetchDiscount() {
       await this.$axios
-        .$get(`table/`)
+        .$get(`discount/`)
         .then(response => {
-          this.table = response;
+          this.discounts = response;
         })
         .catch(err => {
           console.log(err);
@@ -199,20 +171,18 @@ export default {
     },
     async changeCategory(item) {
       this.addRest = true;
-      this.table = {};
-      this.table.position = item.position;
-      this.table.personCount = item.personCount;
-      this.table.forChildren = item.forChildren;
-      this.table.name = item.name;
-      this.table.reservePrice = item.reservePrice;
+      this.discount = {};
+      this.discount.mealId = item.meal.id;
+      this.discount.description = item.description;
+      this.discount.percentage = item.percentage;
       this.apitype = "put";
       this.changeId = item.id;
     },
     async deleteCategory(id) {
       await this.$axios
-        .$delete(`table/${id}`)
+        .$delete(`discount/${id}`)
         .then(res => {
-          this.fetchTable();
+          this.fetchDiscount();
           this.showToasted("Удалено", "success");
         })
         .catch(err => {
@@ -221,35 +191,28 @@ export default {
     },
     async addCategory() {
       if (!this.$refs.formRest.validate()) return;
-
-      const formData = new FormData();
-      for (const data in this.table) {
-        formData.append(data, this.table[data]);
-      }
-
-      const config = {
-        headers: { "content-type": "multipart/form-data" }
-      };
+      if (this.$auth?.user?.restaurant?.id)
+        this.discount.restaurantId = this.$auth.user.restaurant.id;
       if (this.apitype == "put") {
         await this.$axios
-          .$put(`table/${this.changeId}`, null, {
-            params: { ...this.table }
+          .$put(`discount/${this.changeId}`, null, {
+            params: { ...this.discount }
           })
           .then(response => {
             this.showToasted("Изменено успешно", "success");
             this.addRest = false;
-            this.fetchTable();
+            this.fetchDiscount();
           })
           .catch(err => {
             this.showToasted("Что то пошло не так", "error");
           });
       } else {
         await this.$axios
-          .$post(`table/`, formData, config)
+          .$post(`discount/`, null, { params: { ...this.discount } })
           .then(response => {
             this.showToasted("Добавлено успешно", "success");
             this.addRest = false;
-            this.fetchTable();
+            this.fetchDiscount();
           })
           .catch(err => {
             this.showToasted("Что то пошло не так", "error");
@@ -263,7 +226,7 @@ export default {
 <style lang="scss" scoped>
 .rest {
   display: grid;
-  grid-template-columns: 50px 4% 20% 14% 8% 13% 15% 60px;
+  grid-template-columns: 50px 1fr 25% 8% 60px;
   grid-gap: 10px;
   width: 100%;
   padding: 12px;
