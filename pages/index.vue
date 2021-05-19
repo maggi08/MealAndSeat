@@ -14,20 +14,24 @@
     <v-container>
       <Popular />
     </v-container>
-    <FoodType />
+    <FoodType v-if="categories" :categories="categories" />
     <News />
     <AboutUs />
   </div>
 </template>
 
 <script>
-import Popular from "@/components/home/Popular"
-import FoodType from "@/components/home/FoodType"
-import News from "@/components/home/News"
-import AboutUs from "@/components/home/AboutUs"
+import Popular from "@/components/home/Popular";
+import FoodType from "@/components/home/FoodType";
+import News from "@/components/home/News";
+import AboutUs from "@/components/home/AboutUs";
 export default {
+  async asyncData({ $axios }) {
+    const categories = await $axios.$get(`category/`);
+    return { categories };
+  },
   data: () => ({}),
-  components:{
+  components: {
     Popular,
     FoodType,
     News,

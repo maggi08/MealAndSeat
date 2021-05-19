@@ -60,14 +60,17 @@ export default {
   auth: {
     // Options
     redirect: {
-      callback: "/callback",
-      home: false
+      property: "/",
+      logout: "/",
+      login: "/",
+      home: "/"
     },
     strategies: {
       local: {
         // scheme: "refresh",
         token: {
-          property: "accessToken"
+          property: "accessToken",
+          type: "Bearer"
         },
         // refreshToken: {
         //   property: "refresh",
@@ -75,13 +78,12 @@ export default {
         //   maxAge: 15 * 24 * 60 * 60
         // },
         user: {
-          property: false
+          property: "user"
         },
         endpoints: {
           login: { url: "auth/sign-in/", method: "post" },
-          // refresh: { url: "token/refresh/", method: "post" },
-          logout: false,
-          user: { url: "auth/me/", method: "get" }
+          user: { url: "auth/me/", method: "post" },
+          logout: false
         }
       }
     }

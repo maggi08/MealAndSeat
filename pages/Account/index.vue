@@ -8,8 +8,8 @@
             alt=""
             class="img ml-8 mt-6"
           />
-
-          <h1 class="mt-6 mb-16">Роберт Сэнс</h1>
+          <h1 class="mt-6 mb-16" v-if="isSuperAdmin">SuperAdmin</h1>
+          <h1 v-else class="mt-6 mb-16">{{ user.name }} {{ user.surname }}</h1>
         </div>
 
         <div class="line"></div>
@@ -44,7 +44,7 @@
         </h2>
         <h2
           class="mt-7 menu-item"
-          @click="activeMenu = 4"
+          @click="logout"
           :class="{ 'menu-item-active': activeMenu == 4 }"
         >
           Выход
@@ -52,6 +52,26 @@
       </v-col>
       <v-col v-if="activeMenu == 2" class="px-7 mb-16">
         <h1>Оплата</h1>
+        <div class="d-flex justify-space-between mt-15 bb pb-3">
+          <h3>Способ оплаты</h3>
+          <h3 class="red-color ">
+            Добавить <v-icon color="secondary">mdi-plus-circle</v-icon>
+          </h3>
+        </div>
+
+        <div class="visit-card d-flex align-center mt-8 py-7">
+          <img class="card" src="../../assets/mastercard (2) 1.png" alt="" />
+          <h4>**** **** **** 1006</h4>
+          <h4>Годен до: 06/2021</h4>
+        </div>
+        <div class="visit-card d-flex align-center mt-8 py-7">
+          <img class="card" src="../../assets/visa 1.png" alt="" />
+          <h4>**** **** **** 2058</h4>
+          <h4>Годен до: 08/2022</h4>
+        </div>
+      </v-col>
+      <v-col v-if="activeMenu == 'addRest'" class="px-7 mb-16">
+        <h1>Рестораны</h1>
         <div class="d-flex justify-space-between mt-15 bb pb-3">
           <h3>Способ оплаты</h3>
           <h3 class="red-color ">
@@ -100,7 +120,31 @@
 export default {
   data: () => ({
     activeMenu: 0
-  })
+  }),
+  middleware: "auth",
+  computed: {
+    user() {
+      return this.$auth.user;
+    },
+    isSuperAdmin() {
+      if (this.$auth.loggedIn) {
+        let role = this.$auth.user.roles;
+        role = role.find(e => e == "superAdmin");
+        return true;
+      }
+      return false;
+    }
+  },
+  created() {},
+  methods: {
+    async logout() {
+      this.activeMenu = 0;
+      if (this.$auth.loggedIn) {
+        this.$auth.logout();
+        this.$router.push("/");
+      }
+    }
+  }
 };
 </script>
 

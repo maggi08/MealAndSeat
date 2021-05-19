@@ -20,7 +20,6 @@
           <v-text-field
             v-model="date"
             class="col-5 my-input1"
-            :label="$moment().format('LL')"
             prepend-inner-icon="mdi-calendar"
             readonly
             solo
@@ -99,13 +98,37 @@ export default {
     personRules: [v => parseInt(v) < 40 || "Максимум"]
   }),
   created() {
-    this.time = this.$moment().format("hh:mm");
-    console.log(this.$route);
+    this.time = this.$moment()
+      .add("hours", 1)
+      .format("HH:mm");
+    this.date = this.$moment().format("YYYY-MM-DD");
   },
   methods: {
-    goSearch() {
-      console.log(this.$auth);
-      if (this.$auth.loggedIn) console.log(this.$auth.user);
+    async goSearch() {
+      let startTime = this.date + " " + this.time + ":00";
+      let endTime = this.$moment(startTime)
+        .add("hour", 3)
+        .format("YYYY-MM-DD HH:mm:ss");
+      let filter = {
+        startTime: startTime,
+        endTime: endTime,
+        person: parseInt(this.personCount),
+        filter: this.restaurant
+      };
+      console.log(filter);
+      await this.$axios
+        .$get(`restaurant/search/`, {
+          params: filter
+        })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+      console.log(startTime);
+      console.log(endTime);
     }
   }
 };

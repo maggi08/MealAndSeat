@@ -3,13 +3,14 @@
     <img src="@/assets/foodtype.png" alt="" />
     <v-container class="">
       <h1>ЗАКАЖИ СВОЕ ЛЮБИМОЕ БЛЮДО</h1>
+
       <v-row class="types justify-center align-center">
         <h2
-          class="item mx-auto my-2"
-          v-for="(item, index) in type"
+          class="item mx-5 my-3"
+          v-for="(item, index) in categoryList.slice(0, 10)"
           :key="index"
         >
-          #{{ item }}
+          #{{ item.name }}
         </h2>
       </v-row>
     </v-container>
@@ -20,13 +21,21 @@
 export default {
   data: () => ({
     type: ["asian", "european", "Chinease"]
-  })
+  }),
+  props: {
+    categories: Object
+  },
+  computed: {
+    categoryList() {
+      if (this.categories?.categoryList) return this.categories.categoryList;
+    }
+  }
 };
 </script>
 
 <style scoped lang="scss">
 * {
-  font-family: $rob;
+  font-family: $open;
   font-weight: bold;
   font-size: 40px;
   line-height: 47px;
@@ -39,8 +48,8 @@ h1 {
 }
 h2 {
   font-weight: 500;
-  font-size: 28px;
-  line-height: 41px;
+  font-size: 24px;
+  line-height: 30px;
   color: #000000;
 }
 

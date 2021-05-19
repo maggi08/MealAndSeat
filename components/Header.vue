@@ -9,12 +9,22 @@
           <img src="@/assets/logo.svg" alt="" />
         </nuxt-link>
       </div>
-      <div class="login">
+      <div v-if="!$auth.loggedIn" class="login">
         <button @click="(login = true), (clicked = 'login')">Login</button>
         |
         <button @click="(login = true), (clicked = 'sign')">
           Sign up
         </button>
+      </div>
+      <div v-else class="user">
+        <div class="d-flex align-center">
+          <nuxt-link class="link-acc" to="/Account">
+            <img class="avatar mr-2" src="@/assets/default-user.svg" alt="" />
+          </nuxt-link>
+          <nuxt-link class="link-acc" to="/Account">
+            {{ $auth.user.name }} {{ $auth.user.surname }}
+          </nuxt-link>
+        </div>
       </div>
     </v-container>
     <template>
@@ -190,11 +200,7 @@
                   <v-text-field
                     class="mt-3"
                     v-model="person.password"
-                    :rules="[
-                      v => !!v || 'Поле обязательно',
-                      v => (!!v && v.length >= 6) || 'Нужно больше 8 символов',
-                      passwordMatch || 'Пароли не совпадают'
-                    ]"
+                    :rules="passwordRules"
                     type="password"
                     placeholder="Введите ваш пароль"
                     outlined
@@ -243,7 +249,7 @@ export default {
     ],
     passwordRules: [
       v => !!v || "Поле обязательно",
-      v => v?.length >= 8 || "Нужно больше 8 символов"
+      v => v?.length >= 3 || "Нужно больше 8 символов"
     ],
     telRules: [v => !!v || "Поле обязательно"],
     policyRules: [v => !!v || ""]
@@ -260,6 +266,12 @@ export default {
       return true;
     }
   },
+  watch: {
+    clicked() {
+      this.person = {};
+    }
+  },
+
   methods: {
     async forgotPassword() {
       await this.$axios
@@ -280,6 +292,7 @@ export default {
             this.showToasted("Пожалуйста заполните полe Email!", "error");
           else this.showToasted("Что то пошло не так!", "error");
         });
+      this.person = {};
     },
     async submitRegistration() {
       if (!this.$refs.formRegister.validate()) return;
@@ -290,30 +303,25 @@ export default {
           this.success = true;
           this.message = "Вы успешно зарегистрировались!!!";
           this.message2 = "Мы отправили пароль на вашу почту";
-          console.log(response);
-          // this.showToasted("Вы успешно зарегистрировались!", "success");
         })
         .catch(error => {
-          console.log(error);
           this.showToasted("Что то пошло не так!", "error");
         });
+      this.person = {};
     },
     async submitLogin() {
       if (!this.$refs.formLogin.validate()) return;
       await this.$auth
-        // .$post(`auth/sign-in/`, null, { params: this.person })
         .loginWith("local", { params: { ...this.person } })
         .then(response => {
           this.login = false;
-          console.log(response);
           this.showToasted("Вы успешно зашли!", "success");
-          console.log(this.$auth);
-          console.log(window.localStorage);
         })
         .catch(error => {
-          console.log(error);
           this.showToasted("Пароль или логин не правильный!", "error");
         });
+
+      this.person = {};
     }
   }
 };
@@ -383,6 +391,30 @@ export default {
     line-height: 18px;
     color: #3e8ea9;
     cursor: pointer;
+  }
+}
+.user {
+  font-family: $open;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 23px;
+  line-height: 31px;
+
+  color: rgba(0, 0, 0, 0.9);
+  .avatar {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+.link-acc {
+  color: rgba(0, 0, 0, 0.9);
+
+  text-decoration: none;
+  transition: 0.22s;
+  &:hover {
+    color: $theme-color;
   }
 }
 </style>
