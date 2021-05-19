@@ -56,7 +56,12 @@
     <v-app-bar clipped-left fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <nuxt-link to="/admin">
-        <v-img src="/main-logo.svg" class="ml-4" max-width="100"></v-img>
+        <!-- <v-img
+          src="../assets/de"
+          class="ml-4"
+          max-width="100"
+          height="30"
+        ></v-img> -->
       </nuxt-link>
       <v-spacer></v-spacer>
       <v-btn text color="#7c2c6b" class="text-none"
@@ -105,14 +110,14 @@ export default {
           to: "/admin/Categories"
         },
         {
-          icon: "mdi-sale",
-          title: "Программа лояльности",
-          to: "/admin/loyalty"
+          icon: "mdi-table-furniture",
+          title: "Столики",
+          to: "/admin/Table"
         },
         {
-          icon: "mdi-frequently-asked-questions",
-          title: "FAQ",
-          to: "/admin/faq"
+          icon: "mdi-food",
+          title: "Блюдо",
+          to: "/admin/Meal"
         },
         {
           icon: "mdi-cog",

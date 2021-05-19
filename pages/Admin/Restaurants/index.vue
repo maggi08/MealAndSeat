@@ -2,7 +2,7 @@
   <div class="">
     <v-row class="justify-space-between align-center">
       <h1>Рестораны</h1>
-      <v-btn @click="(addRest = true), (restaurant = {})">
+      <v-btn @click="(addRest = true), (restaurant = {}), (apitype = 'post')">
         Добавить ресторан
         <v-icon class="ml-3" color="primary">
           mdi-plus-circle
@@ -21,7 +21,12 @@
           :class="{ 'rest-white': index % 2 == 0 }"
         >
           <div class="rest-item image">
-            <img src="@/assets/default.svg" alt="" />
+            <img
+              :src="`http://95.179.158.161:8080/image/${item.imageSrc}`"
+              width="40px"
+              height="40px"
+              alt=""
+            />
           </div>
           <div class="rest-item">{{ item.name }}</div>
           <div class="rest-item" v-if="item.admin">
@@ -140,7 +145,7 @@
 
                 <v-row>
                   <v-col class="col-12 pa-0 ">
-                    <p class="label">description description</p>
+                    <p class="label">Описание</p>
                     <v-textarea
                       class="mt-3"
                       v-model="restaurant.description"
@@ -210,7 +215,6 @@
                       show-size
                       truncate-length="15"
                       v-model="restaurant.multipartFile"
-                      :rules="nameRules"
                       accept="image/png, image/jpeg, image/bmp"
                     ></v-file-input>
                   </v-col>
@@ -239,7 +243,9 @@ export default {
   },
   layout: "admin",
   data: () => ({
+    apitype: "post",
     addRest: false,
+    changeId: 0,
     restaurant: {},
     nameRules: [v => !!v || "Поле обязательно"],
     numberRules: [
@@ -275,26 +281,27 @@ export default {
       this.restaurant.adminSurname = item.admin.surname;
       this.restaurant.restaurantName = item.name;
       this.restaurant.adminPhone = item.admin.phoneNumber;
+      this.changeId = item.id;
+      this.apitype = "put";
+      // const formData = new FormData();
+      // for (const data in this.restaurant) {
+      //   formData.append(data, this.restaurant[data]);
+      // }
 
-      const formData = new FormData();
-      for (const data in this.restaurant) {
-        formData.append(data, this.restaurant[data]);
-      }
+      // const config = {
+      //   headers: { "content-type": "multipart/form-data" }
+      // };
 
-      const config = {
-        headers: { "content-type": "multipart/form-data" }
-      };
-
-      await this.$axios
-        .$put(`restaurant/`, formData, config)
-        .then(response => {
-          this.showToasted("aa", "success");
-          this.addRest = false;
-        })
-        .catch(err => {
-          console.log(err);
-          this.showToasted("aa", "error");
-        });
+      // await this.$axios
+      //   .$put(`restaurant/`, formData, config)
+      //   .then(response => {
+      //     this.showToasted("aa", "success");
+      //     this.addRest = false;
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //     this.showToasted("aa", "error");
+      //   });
     },
     async deleteRest(id) {
       await this.$axios
@@ -309,21 +316,24 @@ export default {
         });
     },
     async getImage(name) {
-      // await this.$axios
-      //   .$get(`http://95.179.158.161:8080/image/${name}`)
-      //   .then(res => {
-      //     console.log(res);
-      //     this.showToasted("", "success");
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //     this.showToasted("", "error");
-      //   });
-      return "name";
+      let image = `@/assets/default.svg`;
+      await this.$axios
+        .$get(`http://95.179.158.161:8080/image/${name}`)
+        .then(res => {
+          console.log(res);
+          image = `image/${res}`;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      console.log(image);
+      // return image;
     },
     async addRestaurant() {
       if (!this.$refs.formRest.validate()) return;
-
+      if (this.apitype == "put") {
+        this.restaurant.multipartFile = "";
+      }
       const formData = new FormData();
       for (const data in this.restaurant) {
         formData.append(data, this.restaurant[data]);
@@ -332,18 +342,30 @@ export default {
       const config = {
         headers: { "content-type": "multipart/form-data" }
       };
-
-      await this.$axios
-        .$post(`restaurant/`, formData, config)
-        .then(response => {
-          this.showToasted("aa", "success");
-          this.addRest = false;
-          this.fetchRest();
-        })
-        .catch(err => {
-          console.log(err);
-          this.showToasted("aa", "error");
-        });
+      if (this.apitype == "put") {
+        await this.$axios
+          .$put(`restaurant/${this.changeId}`, { ...this.restaurant })
+          .then(response => {
+            this.showToasted("Изменено", "success");
+            this.addRest = false;
+          })
+          .catch(err => {
+            console.log(err);
+            this.showToasted("Что то пошло не так", "error");
+          });
+      } else {
+        await this.$axios
+          .$post(`restaurant/`, formData, config)
+          .then(response => {
+            this.showToasted("Создано", "success");
+            this.addRest = false;
+            this.fetchRest();
+          })
+          .catch(err => {
+            console.log(err);
+            this.showToasted("Что то пошло не так", "error");
+          });
+      }
     }
   }
 };

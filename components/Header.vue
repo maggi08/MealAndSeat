@@ -6,7 +6,7 @@
       </div> -->
       <div class="logo">
         <nuxt-link to="/">
-          <img src="@/assets/logo.svg" alt="" />
+          <img src="../assets/Logo.svg" alt="" />
         </nuxt-link>
       </div>
       <div v-if="!$auth.loggedIn" class="login">
@@ -52,7 +52,7 @@
             <img
               class="mx-auto d-flex justify-center"
               width="280px"
-              src="@/assets/Logo.svg"
+              src="../assets/Logo.svg"
               alt=""
             />
             <v-col v-if="clicked == 'sign'" class="pa-0">
