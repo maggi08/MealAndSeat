@@ -57,16 +57,26 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <nuxt-link to="/admin">
         <!-- <v-img
-          src="../assets/de"
+          src="../assets/Logo.svg"
           class="ml-4"
           max-width="100"
           height="30"
         ></v-img> -->
       </nuxt-link>
       <v-spacer></v-spacer>
-      <v-btn text color="#7c2c6b" class="text-none"
-        ><v-icon class="mr-2">mdi-account</v-icon> Личный кабинет</v-btn
-      >
+      <v-btn text color="#7c2c6b" class="text-none">
+        <nuxt-link
+          v-if="role == 'superAdmin'"
+          to="/Account"
+          style="text-decoration: none"
+        >
+          <v-icon class="mr-2">mdi-account</v-icon> Super Admin
+        </nuxt-link>
+        <nuxt-link v-else to="/Account" style="text-decoration: none">
+          <v-icon class="mr-2">mdi-account</v-icon> {{ $auth.user.name }}
+          {{ $auth.user.surname }}
+        </nuxt-link>
+      </v-btn>
     </v-app-bar>
     <!-- END App bar -->
 
@@ -88,6 +98,7 @@ export default {
       drawer: true,
       clipped: true,
       group: null,
+      role: "",
       items: [
         // {
         //   icon: "mdi-finance",
@@ -99,53 +110,83 @@ export default {
         //     { title: "Сотрудничество", to: "/admin/questionnaires" }
         //   ]
         // },
-        {
-          icon: "mdi-silverware-fork-knife",
-          title: "Рестораны",
-          to: "/admin/Restaurants"
-        },
-        {
-          icon: "mdi-shape-outline",
-          title: "Категории",
-          to: "/admin/Categories"
-        },
-        {
-          icon: "mdi-table-furniture",
-          title: "Столики",
-          to: "/admin/Table"
-        },
-        {
-          icon: "mdi-food",
-          title: "Блюдо",
-          to: "/admin/Meal"
-        },
-        {
-          icon: "mdi-cog",
-          title: "Настройки",
-          to: "/admin/settings",
-          children: [
-            { title: "Контент", to: "/admin/content" },
-            { title: "Комиссия", to: "/admin/commission" },
-            { title: "Условия оплаты ", to: "/admin/payment" }
-          ]
-        },
-        {
-          icon: "mdi-image-plus",
-          title: "Реклама/баннеры",
-          to: "/admin/banners"
-        },
-        {
-          icon: "mdi-account-group",
-          title: "Сотрудники",
-          to: "/admin/staff"
-        },
-        {
-          icon: "mdi-email",
-          title: "Шаблоны",
-          to: "/admin/template"
-        }
+        // {
+        //   icon: "mdi-message-draw",
+        //   title: "Комментарии",
+        //   to: "/admin/Comments"
+        // children: [
+        //   { title: "Контент", to: "/admin/content" },
+        //   { title: "Комиссия", to: "/admin/commission" },
+        //   { title: "Условия оплаты ", to: "/admin/payment" }
+        // ]
+        // },
+        // {
+        //   icon: "mdi-image-plus",
+        //   title: "Реклама/баннеры",
+        //   to: "/admin/banners"
+        // },
+        // {
+        //   icon: "mdi-account-group",
+        //   title: "Сотрудники",
+        //   to: "/admin/staff"
+        // },
+        // {
+        //   icon: "mdi-email",
+        //   title: "Шаблоны",
+        //   to: "/admin/template"
+        // }
       ]
     };
+  },
+  created() {
+    this.getUserMenu();
+  },
+  methods: {
+    getUserMenu() {
+      if (this.$auth.loggedIn) {
+        let role = this.$auth.user.roles[0];
+        this.role = role;
+        console.log(role);
+        if (role == "superAdmin") {
+          this.items = [
+            {
+              icon: "mdi-silverware-fork-knife",
+              title: "Рестораны",
+              to: "/admin/Restaurants"
+            },
+            {
+              icon: "mdi-shape-outline",
+              title: "Категории",
+              to: "/admin/Categories"
+            }
+          ];
+        } else {
+          this.items = [
+            {
+              icon: "mdi-table-furniture",
+              title: "Столики",
+              to: "/admin/Table"
+            },
+            {
+              icon: "mdi-food",
+              title: "Блюдо",
+              to: "/admin/Meal"
+            },
+            {
+              icon: "mdi-sale",
+              title: "Скидки/Новости",
+              to: "/admin/Discount"
+            }
+          ];
+        }
+
+        this.items.push({
+          icon: "mdi-home",
+          title: "Главная",
+          to: "/"
+        });
+      }
+    }
   }
 };
 </script>

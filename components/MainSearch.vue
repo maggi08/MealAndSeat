@@ -42,16 +42,14 @@
           </v-btn>
         </v-date-picker>
       </v-menu>
-      <client-only>
-        <v-text-field
-          class="col-3 my-input2"
-          v-model="time"
-          prepend-inner-icon="mdi-clock"
-          solo
-          v-mask="'##:##'"
-          :rules="timeRules"
-        ></v-text-field>
-      </client-only>
+      <v-text-field
+        class="col-3 my-input2"
+        v-model="time"
+        prepend-inner-icon="mdi-clock"
+        solo
+        v-mask="'##:##'"
+        :rules="timeRules"
+      ></v-text-field>
 
       <v-text-field
         class="col-4 my-input3"
@@ -172,5 +170,8 @@ export default {
       color: $red-color;
     }
   }
+}
+.v-input {
+  max-width: unset;
 }
 </style>
