@@ -60,9 +60,7 @@ export default {
   props: {
     item: Object
   },
-  created() {
-    console.log(this.item);
-  },
+  created() {},
   methods: {
     avgPrice(price1, price2) {
       let avg = `${price1} - ${price2} KZT`;

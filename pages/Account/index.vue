@@ -128,9 +128,9 @@ export default {
     },
     isSuperAdmin() {
       if (this.$auth.loggedIn) {
-        let role = this.$auth.user.roles;
-        role = role.find(e => e == "superAdmin");
-        return true;
+        let role = this.$auth.user.roles[0];
+        if (role == "superAdmin") return true;
+        return false;
       }
       return false;
     }

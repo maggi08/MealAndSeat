@@ -113,6 +113,7 @@ export default {
         person: parseInt(this.personCount),
         filter: this.restaurant
       };
+      this.$store.commit("setQuery", filter);
       this.$router.push({
         path: `/Restaurants`,
         query: {

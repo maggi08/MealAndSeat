@@ -12,27 +12,58 @@
           min="1"
           :rules="personRules"
         ></v-text-field>
-        <div class="d-flex">
-          <div class="col-6 pa-0 pr-3">
-            <h2>Дата</h2>
-            <v-text-field
-              class="mt-0 pt-0"
-              v-model="time"
-              v-mask="'##:##'"
-              :rules="timeRules"
-            ></v-text-field>
-          </div>
-          <div class="col-6 pa-0 pr-3">
-            <h2>Время</h2>
-            <v-text-field
-              class="mt-0 pt-0"
-              v-model="time"
-              v-mask="'##:##'"
-              :rules="timeRules"
-            ></v-text-field>
-          </div>
+        <div class="col-12 pa-0 ">
+          <h2>Время</h2>
+          <v-text-field
+            class="mt-0 pt-0"
+            v-model="time"
+            v-mask="'##:##'"
+            :rules="timeRules"
+          ></v-text-field>
         </div>
-        <button class="btn-book ">Бронировать</button>
+        <div class="col-12 pa-0 ">
+          <h2>Дата</h2>
+          <v-menu
+            ref="datemenu"
+            v-model="dateMenu"
+            :close-on-content-click="false"
+            :return-value.sync="date"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date"
+                class="col-12 pa-0 my-input1"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date"
+              no-title
+              scrollable
+              :min="$moment().format('YYYY-MM-DD')"
+            >
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="dateMenu = false">
+                Cancel
+              </v-btn>
+              <v-btn text color="primary" @click="$refs.datemenu.save(date)">
+                OK
+              </v-btn>
+            </v-date-picker>
+          </v-menu>
+          <!-- <v-text-field
+              class="mt-0 pt-0"
+              v-model="time"
+              v-mask="'##:##'"
+              :rules="timeRules"
+            ></v-text-field> -->
+        </div>
+        <button @click="book" class="btn-book ">Бронировать</button>
       </div>
 
       <div class="map">
@@ -101,8 +132,10 @@
 <script>
 export default {
   data: () => ({
+    dateMenu: false,
     personCount: 1,
     time: "",
+    date: "",
     coords: [43.236823, 76.914914],
     zoom: 15,
     personRules: [v => parseInt(v) < 40 || "Максимум"],
@@ -110,7 +143,46 @@ export default {
       v => parseInt(v.split(":")[0]) <= 24 || "Неправильное время",
       v => parseInt(v.split(":")[1]) <= 59 || "Неправильное время"
     ]
-  })
+  }),
+  methods: {
+    async book() {
+      let api = `client/order/make-order-not-registered`;
+      if (this.$auth.loggedIn) api = `client/order/make-order`;
+
+      let startTime = this.date + " " + this.time + ":00";
+      let endTime = this.$moment(startTime)
+        .add("hour", 3)
+        .format("YYYY-MM-DD HH:mm:ss");
+
+      // console.log(this.$store.state);
+      let query = this.$store.state.query;
+      let params = {
+        ...this.$route.query,
+        ...query,
+        restaurantId: parseInt(this.$route.query.id),
+        startTime: startTime,
+        endTime: endTime,
+        personCount: this.personCount,
+        children: false,
+        features: "sa",
+        position: "STANDARD"
+      };
+      // this.$route.query = params;
+      await this.$axios
+        .$post(`${api}`, null, {
+          params: {
+            ...params
+          }
+        })
+        .then(response => {
+          console.log(response);
+          this.$router.push({ path: `/Booking`, params: params });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
 };
 </script>
 
@@ -170,7 +242,7 @@ export default {
 }
 
 .map {
-  padding-top: 220px;
+  padding-top: 300px;
 }
 
 h3 {

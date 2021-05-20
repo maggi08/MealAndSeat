@@ -88,13 +88,14 @@ export default {
     SortBy,
     SideFilter
   },
+  mounted() {
+    this.$store.commit("setQuery", this.$route.query);
+  },
   methods: {
     filterby(value) {
-      console.log(value);
       this.$route.query.maxPrice = value.maxPrice;
       this.$route.query.minPrice = value.minPrice;
       this.$route.query.stars = value.stars;
-      console.log(this.$route.query);
       this.fetchRestaurants();
     },
     sortBy(value) {
@@ -102,12 +103,13 @@ export default {
       this.fetchRestaurants();
     },
     async fetchRestaurants() {
+      this.$store.commit("setQuery", this.$route.query);
+      console.log(this.$store.state);
       await this.$axios
         .$get(`restaurant/search/`, {
           params: this.$route.query
         })
         .then(response => {
-          console.log(response);
           this.restaurants = response;
           this.length = this.restaurants.length;
         })

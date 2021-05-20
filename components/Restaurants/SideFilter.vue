@@ -167,7 +167,6 @@ export default {
   watch: {
     rating() {
       this.value.stars = parseInt(this.rating);
-      console.log(this.value);
       this.$emit("filterby", this.value);
     },
     price() {
@@ -184,7 +183,6 @@ export default {
         this.value.minPrice = 7000;
         this.value.maxPrice = 10000;
       }
-      console.log(this.value);
       this.$emit("filterby", this.value);
     }
   },
