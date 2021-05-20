@@ -147,7 +147,7 @@ export default {
   methods: {
     async book() {
       let api = `client/order/make-order-not-registered`;
-      if (this.$auth.loggedIn) api = `client/order/make-order`;
+      api = `client/order/make-order`;
 
       let startTime = this.date + " " + this.time + ":00";
       let endTime = this.$moment(startTime)
@@ -167,20 +167,26 @@ export default {
         features: "sa",
         position: "STANDARD"
       };
+      this.$store.commit("setQuery", params);
+      if (this.$auth.loggedIn) {
+        await this.$axios
+          .$post(`${api}`, null, {
+            params: {
+              ...params
+            }
+          })
+          .then(response => {
+            console.log(response);
+            this.$store.commit("setOrder", response);
+            this.$router.push({ path: `/Booking`, params: params });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$router.push({ path: `/Booking`, params: params });
+      }
       // this.$route.query = params;
-      await this.$axios
-        .$post(`${api}`, null, {
-          params: {
-            ...params
-          }
-        })
-        .then(response => {
-          console.log(response);
-          this.$router.push({ path: `/Booking`, params: params });
-        })
-        .catch(err => {
-          console.log(err);
-        });
     }
   }
 };

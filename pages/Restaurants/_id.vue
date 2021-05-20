@@ -12,10 +12,11 @@
         </div>
       </v-container>
     </div>
-
     <v-container class="content mb-145">
-      <div class="">
-        <h1 class="mt-6">{{ rest.name }} - {{ rest.place }}</h1>
+      <div v-if="restaurant.restaurant" class="">
+        <h1 class="mt-6">
+          {{ restaurant.restaurant.name }} - {{ restaurant.restaurant.address }}
+        </h1>
 
         <div class="d-flex align-center mt-1">
           <div
@@ -26,6 +27,8 @@
             <h2 class="blue-color text-lowercase">#{{ item }}</h2>
           </div>
         </div>
+
+        <!-- <pre>{{ restaurant.restaurant }}</pre> -->
         <div class="line my-2 "></div>
         <div class="d-flex align-center">
           <div class="d-flex align-center mr-3">
@@ -54,12 +57,13 @@
         </div>
         <div class="mt-11">
           <p>
-            1993 год — открытие ресторана «OZYURT», первый в городе ресторан
+            {{ restaurant.restaurant.description }}
+            <!-- 1993 год — открытие ресторана «OZYURT», первый в городе ресторан
             безалкогольного формата. В блюдах ресторана используются
             высококачественные сбалансированные комбинации продуктов стандарта
             «ХАЛАЛ». <br />
             2005 год — дистрибьютор торгового бренда «Karmod» в Казахстане, по
-            продаже быстровозводимых модульных кабин, киосков и контейнеров.
+            продаже быстровозводимых модульных кабин, киосков и контейнеров. -->
           </p>
           <div class="d-flex align-center show-more mt-2">
             <v-icon color="#F35757">mdi-plus</v-icon> Читать подробнее
@@ -299,6 +303,10 @@
 <script>
 import RestaurantIdSide from "@/components/RestaurantsIdSide";
 export default {
+  async asyncData({ $axios, query }) {
+    const restaurant = await $axios.$get(`restaurant/${query.id}`);
+    return { restaurant };
+  },
   components: {
     RestaurantIdSide
   },
