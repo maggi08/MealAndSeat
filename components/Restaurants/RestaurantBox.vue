@@ -1,15 +1,25 @@
 <template>
   <div v-if="item" class="">
     <v-col class="box">
-      <div class="image">
+      <div v-if="item.restaurant" class="image">
         <nuxt-link to="/">
-          <img v-if="item.image" :src="item.image" alt="" />
+          <img
+            v-if="item.restaurant.imageSrc"
+            :src="
+              `http://95.179.158.161:8080/image/${item.restaurant.imageSrc}`
+            "
+            alt=""
+          />
           <img v-else src="@/assets/default.svg" alt="" />
         </nuxt-link>
       </div>
-      <div class="">
-        <nuxt-link to="/">
-          <h1 class="ml-2">{{ item.name }} - {{ item.place }}</h1>
+      <div v-if="item.restaurant" class="">
+        <nuxt-link
+          :to="`/Restaurants/${item.restaurant.name}?id=${item.restaurant.id}`"
+        >
+          <h1 class="ml-2">
+            {{ item.restaurant.name }} - {{ item.restaurant.address }}
+          </h1>
         </nuxt-link>
 
         <v-rating
@@ -17,19 +27,22 @@
           length="5"
           readonly
           size="15"
-          :value="item.rating"
+          :value="item.star"
           background-color="#F35757 lighten-1"
           color="#F35757"
         >
         </v-rating>
 
-        <h2 class="ml-2">
-          {{ avgPrice(item.avg_price) }} &bull; {{ item.type }} &bull;
-          {{ item.address.city }}
+        <h2 v-if="item.restaurant" class="ml-2">
+          {{ avgPrice(item.restaurant.minPrice, item.restaurant.maxPrice) }}
+          &bull; {{ item.restaurant.address }} &bull;
         </h2>
 
-        <div v-if="item.times.length > 0" class="d-flex row ml-2 mt-3">
-          <div class="times" v-for="(i, index) in item.times" :key="index">
+        <div
+          v-if="item.hours && item.hours.length > 0"
+          class="d-flex row ml-2 mt-3"
+        >
+          <div class="times" v-for="(i, index) in item.hours" :key="index">
             {{ i }}
           </div>
         </div>
@@ -51,8 +64,9 @@ export default {
     console.log(this.item);
   },
   methods: {
-    avgPrice(price) {
-      return price;
+    avgPrice(price1, price2) {
+      let avg = `${price1} - ${price2} KZT`;
+      return avg;
     }
   }
 };
@@ -124,5 +138,14 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+  &:hover {
+    color: white;
+    background: rgba(124, 44, 107, 0.5);
+  }
 }
 </style>

@@ -1,48 +1,78 @@
 <template>
   <div class="">
     <h1 class="mt-16 text-center">ПОПУЛЯРНЫЕ РЕСТОРАНЫ В АЛМАТЫ</h1>
-
-    <v-row class="mt-15 rest-content d-flex justify-space-between mx-auto">
-      <v-col
-        v-for="(item, index) in restaurants"
-        :key="index"
-        class="rest-item"
-      >
-        <img :src="item.image" alt="" />
+    <v-row
+      v-if="restaurants"
+      class="mt-15 rest-content d-flex justify-space-between mx-auto"
+    >
+      <v-col v-for="(item, index) in topThree" :key="index" class="rest-item">
+        <img
+          :src="`http://95.179.158.161:8080/image/${item.imageSrc}`"
+          alt=""
+        />
         <div class="white-shadow"></div>
         <div class="content">
-          <h2>{{ item.name }}</h2>
-          <h3>{{ item.type }}</h3>
+          <nuxt-link
+            class="rest-link"
+            :to="`/Restaurants/${item.name}?id=${item.id}`"
+          >
+            <h2>{{ item.name }}</h2>
+            <h3>{{ item.address }}</h3>
+          </nuxt-link>
         </div>
       </v-col>
     </v-row>
 
-    <button class="btn-show my-16 mx-auto">ПОКАЗАТЬ ВСЕ РЕСТОРАНЫ ({{num}})</button>
+    <nuxt-link to="/Restaurants" class="btn-show my-16 mx-auto">
+      ПОКАЗАТЬ ВСЕ РЕСТОРАНЫ ({{ len }})
+    </nuxt-link>
   </div>
 </template>
 
 <script>
 export default {
   data: () => ({
-    num: 45,
-    restaurants: [
-      {
-        image: require("@/assets/rest.png"),
-        name: "shafran",
-        type: "ashanalar zhelisi"
-      },
-      {
-        image: require("@/assets/rest.png"),
-        name: "shafran",
-        type: "ashanalar zhelisi"
-      },
-      {
-        image: require("@/assets/rest.png"),
-        name: "shafran",
-        type: "ashanalar zhelisi"
-      },
-    ]
-  })
+    // num: 45
+    // restaurants: [
+    //   {
+    //     image: require("@/assets/rest.png"),
+    //     name: "shafran",
+    //     type: "ashanalar zhelisi"
+    //   },
+    //   {
+    //     image: require("@/assets/rest.png"),
+    //     name: "shafran",
+    //     type: "ashanalar zhelisi"
+    //   },
+    //   {
+    //     image: require("@/assets/rest.png"),
+    //     name: "shafran",
+    //     type: "ashanalar zhelisi"
+    //   }
+    // ]
+  }),
+  props: {
+    restaurants: Object
+  },
+  computed: {
+    topThree() {
+      let arr = [];
+      if (this.restaurants?.restaurantList) {
+        if (this.restaurants.restaurantList[0])
+          arr.push(this.restaurants.restaurantList[0]);
+        if (this.restaurants.restaurantList[1])
+          arr.push(this.restaurants.restaurantList[1]);
+        if (this.restaurants.restaurantList[2])
+          arr.push(this.restaurants.restaurantList[2]);
+      }
+      console.log(arr);
+      return arr;
+    },
+    len() {
+      if (this.restaurants?.restaurantList)
+        return this.restaurants.restaurantList.length;
+    }
+  }
 };
 </script>
 
@@ -84,7 +114,6 @@ button {
   border: 2px solid $theme-color;
   box-sizing: border-box;
   border-radius: 20px;
-  // padding: 18px 40px;
 
   transition: 0.22s ease-in-out;
   &:hover {
@@ -92,7 +121,7 @@ button {
     color: #fff1f1;
   }
 }
-.rest-content{
+.rest-content {
   max-width: 1000px;
 }
 .rest-item {
@@ -126,14 +155,38 @@ button {
     border-radius: 15px;
   }
 
-  .content{
+  .content {
     text-align: center;
     z-index: 10;
   }
 }
-.btn-show{
+.rest-link {
+  text-decoration: none;
+
+  h2,
+  h3 {
+    &:hover {
+      color: $theme-color;
+    }
+  }
+}
+.btn-show {
   width: 100%;
   max-width: 400px;
-  
+  height: 60px;
+  border: 2px solid #7c2c6b;
+  box-sizing: border-box;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-decoration: none;
+  transition: 0.2s;
+
+  &:hover {
+    background: $theme-color;
+    color: white;
+  }
 }
 </style>

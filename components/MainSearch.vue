@@ -113,20 +113,13 @@ export default {
         person: parseInt(this.personCount),
         filter: this.restaurant
       };
-      console.log(filter);
-      await this.$axios
-        .$get(`restaurant/search/`, {
-          params: filter
-        })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-
-      console.log(startTime);
-      console.log(endTime);
+      this.$router.push({
+        path: `/Restaurants`,
+        query: {
+          ...filter
+        }
+      });
+      if (this.$route.name == "Restaurants") this.$emit("goSearch");
     }
   }
 };

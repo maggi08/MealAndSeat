@@ -11,6 +11,8 @@
           no-data-text="Ничего не найдено"
           background-color="white"
           v-model="sortby"
+          item-text="text"
+          item-value="value"
           :items="sortOptions"
           dense
           solo
@@ -25,41 +27,43 @@
 export default {
   data: () => ({
     sortby: "",
-    sortOptions:[
-      "Новые",
-      "Популярности",
-      "Уменьшение рейтинга",
-      "Увеличение рейтинга",
-      "Убыванию цены",
-      "Возрастанию цены",
+    sortOptions: [
+      {
+        text: "Новые",
+        value: "NEW"
+      },
+      {
+        text: "По рейтингу",
+        value: "RATING"
+      }
     ]
   }),
+  watch: {
+    sortby() {
+      this.$emit("sortby", this.sortby);
+    }
+  },
   props: {
     items: Number || 1
   },
   computed: {
     itemsCount() {
-      if (this.items == 1)
-        return this.items + " ресторан доступен в " + this.City;
+      if (this.items == 1) return this.items + " ресторан доступен в Алматы ";
       else if (
         this.items % 10 == 2 ||
         this.items % 10 == 3 ||
         this.items % 10 == 4
       )
-        return this.items + " ресторана доступны в " + this.city;
+        return this.items + " ресторана доступны в Алматы";
       else if (this.items == 0) return "Не найдено доступных ресторанов";
-      else return this.items + " ресторанов доступны в " + this.сity;
-    },
-    city() {
-      return "Алматы";
+      else return this.items + " ресторанов доступны в Алматы";
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.sort{
+.sort {
   width: 158px;
-
 }
 </style>

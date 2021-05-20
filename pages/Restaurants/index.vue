@@ -2,20 +2,23 @@
   <div class="">
     <div class="search">
       <v-container class="pb-0 pt-5">
-        <MainSearch />
+        <MainSearch @goSearch="fetchRestaurants" />
       </v-container>
     </div>
 
     <v-container class="mt-16">
       <v-row>
         <v-col class="col-md-3">
-          <SideFilter />
+          <SideFilter @filterby="filterby" />
         </v-col>
 
         <v-col class="col-md-9">
-          <SortBy :items="2" />
-          <div class="" v-for="(item, index) in boxes" :key="index">
-            <RestaurantBox :item="item" />
+          <SortBy :items="length" @sortby="sortBy" />
+
+          <div v-if="restaurants" class="">
+            <div class="" v-for="(item, index) in restaurants" :key="index">
+              <RestaurantBox :item="item" />
+            </div>
           </div>
         </v-col>
       </v-row>
@@ -28,6 +31,13 @@ import SideFilter from "@/components/Restaurants/SideFilter";
 import SortBy from "@/components/Restaurants/SortBy";
 import RestaurantBox from "@/components/Restaurants/RestaurantBox";
 export default {
+  async asyncData({ $axios, query }) {
+    const restaurants = await $axios.$get(`restaurant/search/`, {
+      params: query
+    });
+    let length = restaurants.length || 0;
+    return { restaurants, length };
+  },
   data: () => ({
     boxes: [
       {
@@ -50,9 +60,10 @@ export default {
           "12:00",
           "14:00",
           "22:00",
-          "12:00",
+          "12:00"
         ],
-        text:"На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
+        text:
+          "На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
       },
       {
         image: "",
@@ -66,9 +77,9 @@ export default {
           city: "Алматы",
           address: "alfarabi 189,"
         },
-        times: [
-        ],
-        text:"На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
+        times: [],
+        text:
+          "На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
       }
     ]
   }),
@@ -76,6 +87,34 @@ export default {
     RestaurantBox,
     SortBy,
     SideFilter
+  },
+  methods: {
+    filterby(value) {
+      console.log(value);
+      this.$route.query.maxPrice = value.maxPrice;
+      this.$route.query.minPrice = value.minPrice;
+      this.$route.query.stars = value.stars;
+      console.log(this.$route.query);
+      this.fetchRestaurants();
+    },
+    sortBy(value) {
+      this.$route.query.sortEnum = value;
+      this.fetchRestaurants();
+    },
+    async fetchRestaurants() {
+      await this.$axios
+        .$get(`restaurant/search/`, {
+          params: this.$route.query
+        })
+        .then(response => {
+          console.log(response);
+          this.restaurants = response;
+          this.length = this.restaurants.length;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>

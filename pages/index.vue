@@ -12,10 +12,10 @@
       </div>
     </div>
     <v-container>
-      <Popular />
+      <Popular :restaurants="restaurants" />
     </v-container>
     <FoodType v-if="categories" :categories="categories" />
-    <News />
+    <News :discounts="discounts" />
     <AboutUs />
   </div>
 </template>
@@ -27,10 +27,13 @@ import News from "@/components/home/News";
 import AboutUs from "@/components/home/AboutUs";
 export default {
   async asyncData({ $axios }) {
-    const categories = await $axios.$get(`category/`);
-    return { categories };
+    const categories = await $axios.$get(`category/parents/`);
+    const restaurants = await $axios.$get(`restaurant/`);
+    const discounts = await $axios.$get(`discount/all/`);
+    return { categories, restaurants, discounts };
   },
   data: () => ({}),
+  computed() {},
   components: {
     Popular,
     FoodType,

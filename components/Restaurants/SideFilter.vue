@@ -3,7 +3,7 @@
     <div @click="openModal" class="map">
       <img class="map-default" src="@/assets/map.svg" alt="" />
     </div>
-    <div class="options mt-11">
+    <div v-if="false" class="options">
       <div class="">
         <img src="@/assets/chef-hat 1.svg" alt="" />
         Опции
@@ -20,8 +20,8 @@
         </v-radio>
       </v-radio-group>
     </div>
-    <div class="line"></div>
-    <div class="">
+    <!-- <div class="line"></div> -->
+    <div class=" mt-11">
       <div class="">
         <img src="@/assets/money (2).svg" alt="" />
         Средний чек
@@ -55,9 +55,9 @@
         >
           <template v-slot:label>
             <div class="d-flex align-center">
-              <img v-if="item.rating == '5'" src="@/assets/rate5.svg" alt="">
-              <img v-if="item.rating == '4'" src="@/assets/rate4.svg" alt="">
-              <img v-if="item.rating == '3'" src="@/assets/rate3.svg" alt="">
+              <img v-if="item.rating == '5'" src="@/assets/rate5.svg" alt="" />
+              <img v-if="item.rating == '4'" src="@/assets/rate4.svg" alt="" />
+              <img v-if="item.rating == '3'" src="@/assets/rate3.svg" alt="" />
             </div>
           </template>
         </v-radio>
@@ -98,6 +98,11 @@
 <script>
 export default {
   data: () => ({
+    value: {
+      stars: null,
+      maxPrice: null,
+      minPrice: null
+    },
     coords: [43.236823, 76.914914],
     zoom: 15,
     map: [
@@ -128,33 +133,61 @@ export default {
     ],
     prices: [
       {
-        name: "KZT 1000 - 2000",
+        name: "KZT 1000 - 3000",
         id: 1
       },
       {
-        name: "KZT 3000 - 4000",
+        name: "KZT 3000 - 5000",
         id: 2
       },
       {
-        name: "KZT 5000 - 6000",
+        name: "KZT 5000 - 7000",
         id: 3
+      },
+      {
+        name: "KZT 7000 - 10000",
+        id: 4
       }
     ],
     ratings: [
       {
-        rating: '5',
+        rating: "5",
         id: 1
       },
       {
-        rating: '4',
+        rating: "4",
         id: 2
       },
       {
-        rating: '3',
+        rating: "3",
         id: 3
       }
     ]
   }),
+  watch: {
+    rating() {
+      this.value.stars = parseInt(this.rating);
+      console.log(this.value);
+      this.$emit("filterby", this.value);
+    },
+    price() {
+      if (parseInt(this.price) == 1) {
+        this.value.minPrice = 1000;
+        this.value.maxPrice = 3000;
+      } else if (parseInt(this.price) == 2) {
+        this.value.minPrice = 3000;
+        this.value.maxPrice = 5000;
+      } else if (parseInt(this.price) == 3) {
+        this.value.minPrice = 5000;
+        this.value.maxPrice = 7000;
+      } else if (parseInt(this.price) == 4) {
+        this.value.minPrice = 7000;
+        this.value.maxPrice = 10000;
+      }
+      console.log(this.value);
+      this.$emit("filterby", this.value);
+    }
+  },
   methods: {
     changeCoords(e) {
       console.log(e);
@@ -217,7 +250,7 @@ export default {
   background: #eef8fb;
 }
 
-.line{
+.line {
   height: 2px;
   width: 100%;
   background: rgba(0, 0, 0, 0.2);
