@@ -163,7 +163,7 @@ export default {
         startTime: startTime,
         endTime: endTime,
         personCount: this.personCount,
-        children: false,
+        children: true,
         features: "sa",
         position: "STANDARD"
       };
