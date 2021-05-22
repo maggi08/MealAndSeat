@@ -98,9 +98,11 @@
                     required
                   >
                     <template v-slot:item="{ item }">
-                      {{ item }}
-                      <div v-if="item.parentCategory" class="ml-3">
-                        ({{ item.parentCategory.name }})
+                      <div v-if="item" class="ml-3">
+                        {{ item.name }}
+                        <span v-if="item.parentCategory"
+                          >({{ item.parentCategory.name }})</span
+                        >
                       </div>
                     </template>
                   </v-select>
@@ -302,7 +304,7 @@ export default {
 <style lang="scss" scoped>
 .rest {
   display: grid;
-  grid-template-columns: 50px 3% 20% 14% 10% 11% 15% 60px;
+  grid-template-columns: 50px 4% 20% 14% 10% 11% 15% 60px;
   grid-gap: 10px;
   width: 100%;
   padding: 12px;

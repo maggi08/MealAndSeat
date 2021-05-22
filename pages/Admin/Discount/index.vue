@@ -79,9 +79,11 @@
                     required
                   >
                     <template v-slot:item="{ item }">
-                      {{ item.name }}
-                      <div v-if="item.category" class="ml-3">
-                        ({{ item.category.name }})
+                      <div v-if="item" class="ml-3">
+                        {{ item.name }}
+                        <span v-if="item.category">
+                          ({{ item.category.name }})</span
+                        >
                       </div>
                     </template>
                   </v-select>
