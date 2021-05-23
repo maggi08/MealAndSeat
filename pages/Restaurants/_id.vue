@@ -12,10 +12,13 @@
         </div>
       </v-container>
     </div>
+    <!-- {{ restaurant.restaurantList }} -->
     <v-container class="content mb-145">
-      <div v-if="restaurant.restaurant" class="">
+      <div v-if="restaurant.restaurantList" class="">
+        <!-- {{ restaurant.restaurantList }} -->
         <h1 class="mt-6">
-          {{ restaurant.restaurant.name }} - {{ restaurant.restaurant.address }}
+          {{ restaurant.restaurantList.name }} -
+          {{ restaurant.restaurantList.address }}
         </h1>
 
         <div class="d-flex align-center mt-1">
@@ -57,7 +60,7 @@
         </div>
         <div class="mt-11">
           <p>
-            {{ restaurant.restaurant.description }}
+            {{ restaurant.restaurantList.description }}
             <!-- 1993 год — открытие ресторана «OZYURT», первый в городе ресторан
             безалкогольного формата. В блюдах ресторана используются
             высококачественные сбалансированные комбинации продуктов стандарта

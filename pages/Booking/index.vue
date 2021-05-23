@@ -187,8 +187,13 @@
             </v-col>
           </v-row>
 
-          <v-btn block @click="payment" color="primary" class="mt-10">
-            Оплатить
+          <v-btn block color="primary" class="mt-10">
+            <a
+              style="color: white; text-decoration: none"
+              href="http://95.179.158.161:8080/api/charge"
+            >
+              Оплатить
+            </a>
           </v-btn>
           <!-- <nuxt-link class="home" to="/">Вернуться на главную </nuxt-link> -->
           <!-- <img :src="``" width="160px" height="160px" alt="" />
