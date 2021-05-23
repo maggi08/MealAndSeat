@@ -245,7 +245,9 @@ export default {
     whishRules: [v => v.length <= 40 || "Длинное поле"]
   }),
   methods: {
-    payment() {},
+    payment() {
+      this.$router.push("/api/charge");
+    },
     book() {
       if (!this.$refs.form.validate()) return;
     },
