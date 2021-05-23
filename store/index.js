@@ -1,6 +1,7 @@
 export const state = () => ({
   query: {},
-  order: {}
+  order: {},
+  meal: []
 });
 export const mutations = {
   setQuery(state, payload) {
@@ -8,5 +9,11 @@ export const mutations = {
   },
   setOrder(state, payload) {
     state.order = payload;
+  },
+  setMeal(state, payload) {
+    state.meal = payload;
+  },
+  addMeal(state, payload) {
+    state.meal.push(payload);
   }
 };

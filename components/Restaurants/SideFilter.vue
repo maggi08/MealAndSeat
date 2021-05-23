@@ -64,6 +64,10 @@
       </v-radio-group>
     </div>
 
+    <v-btn color="primary" class="mt-5" @click="clearFilter"
+      >Сбросить фильтр</v-btn
+    >
+
     <div v-if="mapModal" @click="closeModal" class="modalka">
       <div class="close">
         <v-icon>close-circle</v-icon>
@@ -189,6 +193,12 @@ export default {
   methods: {
     changeCoords(e) {
       console.log(e);
+    },
+    clearFilter() {
+      this.value.stars = null;
+      this.value.maxPrice = null;
+      this.value.minPrice = null;
+      this.$emit("filterby", this.value);
     },
     openModal() {
       this.mapModal = true;

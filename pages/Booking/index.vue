@@ -1,7 +1,7 @@
 <template>
   <v-container class="content d-flex justify-space-between mt-11">
     <div v-if="order.order" class="rest-box mb-16">
-      <div class="pochti">Вы забронировали!</div>
+      <div class="pochti">Ждет оплаты!</div>
       <div class="d-flex mt-5 box">
         <img
           class="image mr-9"
@@ -20,11 +20,11 @@
             <div class=" align-center">
               <v-icon>mdi-calendar</v-icon>
               <!-- Апрель 15, 2021 -->
-              {{ order.order.startTime }}
+              {{ dateFormat(order.order.startTime) }}
             </div>
             <div class="ml-4 align-center">
               <v-icon>mdi-clock-outline</v-icon>
-              18:00
+              {{ time }}
             </div>
             <div class="ml-4 align-center">
               <v-icon>mdi-account-outline</v-icon>
@@ -147,9 +147,50 @@
         </v-form>
       </div>
 
-      <v-col v-else class="col-12 card mt-16">
-        <div class="d-flex">
-          <nuxt-link class="home" to="/">Вернуться на главную </nuxt-link>
+      <v-col v-else class="col-12 card mt-16" style="max-width: 700px">
+        <div class="">
+          <v-row
+            class="d-flex align-center ab mt-4"
+            v-for="(item, index) in $store.state.meal"
+            :key="index"
+          >
+            <v-col @click="addCount(item)" class="col-3 ">
+              <img
+                :src="`http://95.179.158.161:8080/image/${item.imageSrc}`"
+                width="100px
+                      "
+                height="100px"
+                style="border-radius: 10px"
+                alt=""
+              />
+            </v-col>
+            <v-col @click="addCount(item)" class="col-6 ">
+              <h2>{{ item.name }}</h2>
+              <h2
+                style="font-weight: 400; font-size: 18px;line-height: 20px"
+                v-if="item.category"
+              >
+                {{ item.category.name
+                }}<span v-if="item.category.parentCategory"
+                  >-( {{ item.category.parentCategory.name }})</span
+                >
+              </h2>
+              <h2 style="font-weight: 400; font-size: 18px;line-height: 20px">
+                {{ item.description }}
+              </h2>
+              <h2 style="font-weight: 400; font-size: 18px;line-height: 20px">
+                {{ item.features }}
+              </h2>
+            </v-col>
+            <v-col class="col-3 d-flex align-center justify-space-between">
+              <h2>{{ item.price }} KZT</h2>
+            </v-col>
+          </v-row>
+
+          <v-btn block @click="payment" color="primary" class="mt-10">
+            Оплатить
+          </v-btn>
+          <!-- <nuxt-link class="home" to="/">Вернуться на главную </nuxt-link> -->
           <!-- <img :src="``" width="160px" height="160px" alt="" />
           <v-col class="">
             <h2>Ваш столик №{{ order.reservedTable.name }}</h2>
@@ -186,6 +227,7 @@
 export default {
   data: () => ({
     valid: false,
+    time: "",
     last_name: "",
     first_name: "",
     tel: "",
@@ -203,19 +245,19 @@ export default {
     whishRules: [v => v.length <= 40 || "Длинное поле"]
   }),
   methods: {
+    payment() {},
     book() {
       if (!this.$refs.form.validate()) return;
     },
-    formatDate(date) {
-      // let a = date.split("T")[0];
-      // let b = date.split("T")[1];
-      // a = this.$moment().format(LL);
-      // a = a + " " + b;
-      // return a;
+    dateFormat(date) {
+      let a = date.replace("T", " ").split(" ");
+      this.time = this.$moment(date).format("hh:mm");
+      return this.$moment(a[0]).format("LL");
     }
   },
   computed: {
     order() {
+      console.log(this.$store.state);
       if (this.$store.state.order) return this.$store.state.order;
     }
   },

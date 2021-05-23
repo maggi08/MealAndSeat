@@ -25,6 +25,7 @@
             solo
             v-bind="attrs"
             v-on="on"
+            style="width: 33%;"
           ></v-text-field>
         </template>
         <v-date-picker
@@ -49,6 +50,7 @@
         solo
         v-mask="'##:##'"
         :rules="timeRules"
+        style="width: 33%;"
       ></v-text-field>
 
       <v-text-field
@@ -59,6 +61,7 @@
         type="number"
         min="1"
         :rules="personRules"
+        style="width: 33%;"
       ></v-text-field>
     </v-row>
     <v-col class="col-3 " :class="[$route.path == '/' ? '' : 'pb-0']">

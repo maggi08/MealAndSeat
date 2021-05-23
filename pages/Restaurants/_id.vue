@@ -295,7 +295,92 @@
       </div>
       <div class=""></div>
 
-      <RestaurantIdSide />
+      <RestaurantIdSide @booked="booked" />
+
+      <template>
+        <div class="text-center modalka">
+          <v-dialog v-model="mealmodal" width="600">
+            <v-card class="py-5 px-12">
+              <img
+                class="mx-auto d-flex justify-center"
+                width="280px"
+                src="@/assets/Logo.svg"
+                alt=""
+              />
+
+              <v-col class="pa-0">
+                <v-form
+                  ref="formLogin"
+                  @submit.prevent="submitMeal"
+                  class="mt-8"
+                >
+                  <div v-if="meal" class="">
+                    <v-row
+                      class="d-flex align-center ab"
+                      v-for="(item, index) in meal.mealList"
+                      :key="index"
+                    >
+                      <!-- {{ item }} -->
+                      <v-col @click="addCount(item)" class="col-3 ">
+                        <img
+                          :src="
+                            `http://95.179.158.161:8080/image/${item.imageSrc}`
+                          "
+                          width="100px
+                      "
+                          height="100px"
+                          style="border-radius: 10px"
+                          alt=""
+                        />
+                      </v-col>
+                      <v-col @click="addCount(item)" class="col-6 ">
+                        <!-- {{ item }} -->
+                        <h2>{{ item.name }}</h2>
+                        <h2
+                          style="font-weight: 400; font-size: 18px;line-height: 20px"
+                          v-if="item.category"
+                        >
+                          {{ item.category.name
+                          }}<span v-if="item.category.parentCategory"
+                            >-( {{ item.category.parentCategory.name }})</span
+                          >
+                        </h2>
+                        <h2
+                          style="font-weight: 400; font-size: 18px;line-height: 20px"
+                        >
+                          {{ item.description }}
+                        </h2>
+                        <h2
+                          style="font-weight: 400; font-size: 18px;line-height: 20px"
+                        >
+                          {{ item.features }}
+                        </h2>
+                      </v-col>
+                      <v-col
+                        class="col-3 d-flex align-center justify-space-between"
+                      >
+                        <h2>{{ item.price }} KZT</h2>
+                      </v-col>
+                    </v-row>
+                    <v-col class="ml-auto">
+                      <div class="ml-auto counter">
+                        <div class="count">{{ counter }}</div>
+                        <v-icon x-large color="primary">
+                          mdi-cart-outline
+                        </v-icon>
+                      </div>
+                    </v-col>
+                  </div>
+                </v-form>
+              </v-col>
+
+              <v-btn @click="submitMeal" class="ml-auto" color="primary"
+                >Забронировать</v-btn
+              >
+            </v-card>
+          </v-dialog>
+        </div>
+      </template>
     </v-container>
   </div>
 </template>
@@ -305,12 +390,17 @@ import RestaurantIdSide from "@/components/RestaurantsIdSide";
 export default {
   async asyncData({ $axios, query }) {
     const restaurant = await $axios.$get(`restaurant/${query.id}`);
-    return { restaurant };
+    const meal = await $axios.$get(`meal/${query.id}`);
+    return { restaurant, meal };
   },
   components: {
     RestaurantIdSide
   },
   data: () => ({
+    mealmodal: false,
+    chosen: [],
+    counter: 0,
+    clicked: true,
     hover: 0,
     slice: 4,
     activeFoodCategory: 1,
@@ -386,6 +476,24 @@ export default {
         "На данный момент онлайн-возможности недоступны в течение 2,5 часов после вашего запроса. У вас есть на уме другое время?"
     }
   }),
+  methods: {
+    booked() {
+      this.mealmodal = true;
+    },
+    async submitMeal() {
+      let params = this.$route.query;
+      setTimeout(() => {
+        this.$router.push({ path: `/Booking`, params: params });
+      }, 600);
+    },
+    addCount(item) {
+      this.chosen.push(item);
+      this.counter++;
+      if (this.counter == 1) this.$store.commit("setMeal", [item]);
+      else this.$store.commit("addMeal", item);
+      console.log(this.$store.state.meal);
+    }
+  },
   created() {
     this.time = this.$moment().format("hh:mm");
   }
@@ -434,6 +542,23 @@ h6 {
   font-weight: 300;
   font-size: 15px;
   line-height: 20px;
+}
+.counter {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  .count {
+    position: absolute;
+    color: $theme_color;
+    right: 0;
+    top: 0;
+  }
+}
+.ab {
+  cursor: pointer;
+  &:hover {
+    background: #e2e2e2;
+  }
 }
 .hero {
   position: relative;

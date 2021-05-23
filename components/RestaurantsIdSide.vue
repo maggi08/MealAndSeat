@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import toastedMixin from "@/mixins/toasted.mixin";
 export default {
   data: () => ({
     dateMenu: false,
@@ -144,6 +145,8 @@ export default {
       v => parseInt(v.split(":")[1]) <= 59 || "Неправильное время"
     ]
   }),
+
+  mixins: [toastedMixin],
   methods: {
     async book() {
       let api = `client/order/make-order-not-registered`;
@@ -177,8 +180,17 @@ export default {
           })
           .then(response => {
             console.log(response);
-            this.$store.commit("setOrder", response);
-            this.$router.push({ path: `/Booking`, params: params });
+            if (response.order && response.reservedTable) {
+              this.$store.commit("setOrder", response);
+              // console.log(this.$store.state);
+              this.$emit("booked");
+              // setTimeout(() => {
+              //   this.$router.push({ path: `/Booking`, params: params });
+              // }, 1000);
+            } else {
+              this.showToasted("Свободных мест нет!", "error");
+              this.$router.go(-1);
+            }
           })
           .catch(err => {
             console.log(err);
